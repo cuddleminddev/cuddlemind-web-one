@@ -51,6 +51,11 @@
                             </button>
                         </td>
                     </tr>
+                    <tr *ngIf="paginatedPlans.length === 0">
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            <i class="bi bi-folder-x fs-4 me-2"></i> No plans found.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <pagination class="d-flex justify-content-center mt-3" [totalItems]="filteredPlans.length"
