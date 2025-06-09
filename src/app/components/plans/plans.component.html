@@ -45,7 +45,8 @@
                                 (click)="openModal(content, plan)" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete">
+                            <button class="btn btn-sm btn-outline-danger rounded-circle"
+                                (click)="deletePlan(plan.id, plan)" title="Delete">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>

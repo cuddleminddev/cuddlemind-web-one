@@ -7,6 +7,7 @@ import { PlanService } from './service/plans.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
 import { FilterPipe } from '../../shared/pipes/filter.pipe';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-plans',
@@ -145,6 +146,40 @@ export class PlansComponent implements OnInit {
     }
   }
 
+  deletePlan(id: string, plan: Plan) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to delete this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.deletePlan(id, plan).subscribe({
+          next: (res) => {
+            this.loadPlanList();
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success"
+            });
+          },
+          error: (err) => {
+            this.alertService.showAlert({
+              message: 'Failed to delete plan. Please try again.',
+              type: 'error',
+              autoDismiss: true,
+              duration: 4000
+            });
+          }
+        })
+      }
+    });
+  }
+
   get paginatedPlans(): Plan[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredPlans.slice(startIndex, startIndex + this.itemsPerPage);
@@ -161,7 +196,7 @@ export class PlansComponent implements OnInit {
   positiveIntegerValidator(control: AbstractControl): ValidationErrors | null {
     const val = control.value;
     if (val === null || val === '' || val === undefined) {
-      return null; // Let 'required' handle empty values
+      return null;
     }
 
     const numberVal = +val;
