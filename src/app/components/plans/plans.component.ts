@@ -6,10 +6,11 @@ import { Plan } from './models/plan';
 import { PlanService } from './service/plans.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
 import { FilterPipe } from '../../shared/pipes/filter.pipe';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'app-plans',
-  imports: [CommonModule, ReactiveFormsModule, NgbTooltipModule, FormsModule, FilterPipe],
+  imports: [CommonModule, ReactiveFormsModule, NgbTooltipModule, FormsModule, FilterPipe, PaginationModule],
   templateUrl: './plans.component.html',
   styleUrl: './plans.component.css'
 })
@@ -17,6 +18,9 @@ export class PlansComponent implements OnInit {
   plans: Plan[] = [];
   filterText!: string;
   loading: boolean = true;
+
+  currentPage = 1;
+  itemsPerPage = 10;
 
   constructor(
     private service: PlanService,
@@ -44,6 +48,19 @@ export class PlansComponent implements OnInit {
         });
       }
     })
+  }
+
+  get paginatedPlans(): Plan[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredPlans.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get filteredPlans(): Plan[] {
+    return this.filterText
+      ? this.plans.filter(plan =>
+        plan.name.toLowerCase().includes(this.filterText.toLowerCase())
+      )
+      : this.plans;
   }
 
 }
