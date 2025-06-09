@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
@@ -8,9 +8,10 @@ import { NavigationEnd, Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   currentRoute: string = '';
   currentLabel: string = '';
+  user!:any;
 
   private routeLabels: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
@@ -34,6 +35,11 @@ export class HeaderComponent {
     });
   }
 
+  ngOnInit(): void {
+    const userString = localStorage.getItem('user');
+    this.user = userString ? JSON.parse(userString) : null;    
+  }
+
   setCurrentLabel(url: string) {
     const matchedPath = Object.keys(this.routeLabels).find(path => url.startsWith(path));
     this.currentLabel = matchedPath ? this.routeLabels[matchedPath] : '';
@@ -41,5 +47,11 @@ export class HeaderComponent {
 
   navigateTo(path: string): void {
     this.router.navigate([path]);
+  }
+
+  logout(){
+    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    this.navigateTo('/login')
   }
 }

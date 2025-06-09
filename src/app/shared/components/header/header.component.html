@@ -64,11 +64,18 @@
                 </ul>
 
                 <!-- Footer -->
-                <div class="details d-flex align-items-center px-3 py-3 border-top bg-light mt-auto">
-                    <i class="bi bi-person-circle fs-4 me-3 text-secondary"></i>
-                    <div>
-                        <h6 class="mb-0 fw-semibold">User</h6>
-                        <small class="text-muted">user&#64;gmail.com</small>
+                <div
+                    class="details d-flex justify-content-between align-items-center px-3 py-3 border-top bg-light mt-auto">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle fs-4 me-3 text-secondary"></i>
+                        <div>
+                            <h6 class="mb-0 fw-semibold">{{ user.name }}</h6>
+                            <small class="text-muted">{{ user.email }}</small>
+                        </div>
+                    </div>
+                    <div class="ps-3 ms-3 border-start logout-container">
+                        <i class="bi bi-box-arrow-in-right logout-icon" role="button" title="Logout"
+                            (click)="logout()"></i>
                     </div>
                 </div>
             </div>

@@ -41,8 +41,12 @@
                             </span>
                         </td>
                         <td>
-                            <button class="btn btn-sm btn-outline-secondary rounded-circle" (click)="openModal(content, plan)" title="Edit">
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle me-1"
+                                (click)="openModal(content, plan)" title="Edit">
                                 <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </td>
                     </tr>
@@ -68,7 +72,7 @@
 
                 <label for="planName" class="form-label">Plan Name<span class="text-danger">*</span></label>
                 <input type="text" id="planName" class="form-control mb-2" placeholder="Enter plan name"
-                    formControlName="planName" autofocus autocomplete="off"/>
+                    formControlName="planName" autofocus autocomplete="off" />
                 <div *ngIf="planForm.get('planName')?.touched && planForm.get('planName')?.invalid"
                     class="text-danger small">
                     <div *ngIf="planForm.get('planName')?.errors?.['required']">Plan name is required.</div>

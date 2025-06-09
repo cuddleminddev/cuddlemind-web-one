@@ -40,3 +40,15 @@
 .details small {
     font-size: 0.85rem;
 }
+
+.logout-icon {
+  font-size: 30px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.logout-icon:hover {
+  color: #dc3545;
+  transform: scale(1.2);
+  cursor: pointer;
+  font-size: 35px;
+}
