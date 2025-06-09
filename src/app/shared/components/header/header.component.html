@@ -20,20 +20,19 @@
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link active fs-3" routerLink="/dashboard" routerLinkActive="active"><i
-                                class="bi bi-body-text me-2"></i>Dashboard</a>
+                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/dashboard'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/dashboard')"><i class="bi bi-body-text me-2"></i>Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" routerLink="/list" routerLinkActive="active"><i class="bi bi-people me-2"></i>Users</a>
+                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/list'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/list')"><i class="bi bi-people me-2"></i>Users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" routerLink="/bookings" routerLinkActive="active"><i class="bi bi-calendar3 me-2"></i>Bookings</a>
+                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/bookings'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/bookings')"><i class="bi bi-calendar3 me-2"></i>Bookings</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" routerLink="/plans" routerLinkActive="active"><i class="bi bi-folder2-open me-2"></i>Plans</a>
+                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/plans'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/plans')"><i class="bi bi-folder2-open me-2"></i>Plans</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" routerLink="/chat" routerLinkActive="active"><i class="bi bi-chat-right me-2"></i>Chat</a>
+                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/chat'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/chat')"><i class="bi bi-chat-right me-2"></i>Chat</a>
                     </li>
                 </ul>
             </div>

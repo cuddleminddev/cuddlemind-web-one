@@ -1,0 +1,15 @@
+.nav-link {
+  cursor: pointer;
+    margin: 5px;
+    padding: 1rem;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: #393fe1;
+  font-weight: 500;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 1rem;
+}
