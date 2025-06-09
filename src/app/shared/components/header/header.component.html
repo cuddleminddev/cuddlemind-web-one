@@ -1,0 +1,50 @@
+<nav class="navbar bg-body-tertiary fixed-top">
+    <div class="container-fluid d-flex justify-content-between">
+
+        <button class="navbar-toggler order-1" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-brand ms-auto order-2">
+            <i class="bi bi-bell me-4 fs-2"></i>
+            <i class="bi bi-person-circle fs-2"></i>
+        </div>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <img class="offcanvas-title img-fluid me-auto" id="offcanvasNavbarLabel" src="/header/logo.png" alt="" style="max-height: 100px;">
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link active fs-3" aria-current="page" href="#"><i
+                                class="bi bi-body-text me-2"></i>Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#"><i class="bi bi-people me-2"></i>Users</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#"><i class="bi bi-calendar3 me-2"></i>Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#"><i class="bi bi-folder2-open me-2"></i>Plans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#"><i class="bi bi-chat-right me-2"></i>Chat</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="details d-flex align-items-center p-3 border-top mt-auto">
+                <i class="bi bi-person-circle fs-2 me-3"></i>
+                <div>
+                    <h6 class="mb-0">User</h6>
+                    <small class="text-muted">user&#64;gmail.com</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</nav>
