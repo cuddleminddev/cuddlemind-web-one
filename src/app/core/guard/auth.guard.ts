@@ -1,5 +1,17 @@
+// src/app/core/guards/auth.guard.ts
 import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../interceptor/auth.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  return true;
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isLoggedIn()) {
+    return true;
+  }
+
+  router.navigate(['/login']);
+  return false;
 };

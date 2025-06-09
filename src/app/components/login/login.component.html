@@ -1,1 +1,27 @@
-<p>login works!</p>
+<div class="parent">
+    <div class="div1">
+        <img src="login/login.png" alt="Login Image" height="100%" width="100%">
+    </div>
+
+    <div class="div2">
+        <div class="img">
+            <img src="header/logo.png" alt="Logo">
+        </div>
+        <div class="login">
+            <h3 class="mb-4">Log In</h3>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="fields">
+                    <input formControlName="email" type="text" class="form-control mb-2" placeholder="Email Address">
+                    <input formControlName="password" type="password" class="form-control mb-2" placeholder="Password">
+                    <button type="submit" [disabled]="loading"
+                        class="form-control btn btn-primary mb-2 d-flex justify-content-center align-items-center gap-2">
+                        <span *ngIf="!loading">Log In</span>
+                        <div *ngIf="loading" class="spinner-border spinner-border-sm text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button> <a href="#">Forgot Password?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

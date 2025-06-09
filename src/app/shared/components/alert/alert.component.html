@@ -1,1 +1,10 @@
-<p>alert works!</p>
+<div *ngIf="alert" class="alert-container">
+  <div class="alert-box alert alert-{{alert.type}} alert-dismissible fade show d-flex align-items-center" role="alert">
+    <div class="alert-icon me-2">
+      <span [innerHTML]="getIcon(alert.type)"></span>
+    </div>
+    <div class="flex-grow-1">{{ alert.message }}</div>
+    <button *ngIf="alert.dismissible !== false" type="button" class="btn-close ms-2" aria-label="Close"
+      (click)="close()"></button>
+  </div>
+</div>
