@@ -1,1 +1,49 @@
-<p>plans works!</p>
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="input-group custom-search-input w-50 shadow-sm rounded">
+      <span class="input-group-text bg-white border-end-0">
+        <i class="bi bi-search text-muted"></i>
+      </span>
+      <input type="text" class="form-control border-start-0" placeholder="Search plans" [(ngModel)]="filterText" />
+    </div>
+    <button class="btn btn-primary d-flex align-items-center shadow-sm px-4">
+      <i class="bi bi-plus-lg me-2"></i>Add
+    </button>
+  </div>
+
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Plan Name</th>
+          <th>Amount</th>
+          <th>Validity</th>
+          <th>No Of Bookings</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plan of plans | filter: filterText : 'name'">
+          <td>{{ plan.name }}</td>
+          <td>₹{{ plan.amount }}</td>
+          <td>{{ plan.timePeriod }}</td>
+          <td>{{ plan.bookingFrequency }}</td>
+          <td>
+            <span
+              class="badge px-3 py-2"
+              [ngClass]="plan.isActive ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'"
+            >
+              {{ plan.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-secondary rounded-circle" title="Edit">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
