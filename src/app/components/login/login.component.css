@@ -8,6 +8,31 @@
 .div1 {
     grid-column: 1 / span 3;
     grid-row: 1;
+    position: relative;
+}
+
+.centered-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+    text-align: start;
+    width: 70%;
+    background-color: rgba(239, 238, 230, 0.926);
+    padding: 40px 50px;
+    border-radius: 12px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.centered-text h3 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.centered-text p {
+    margin-bottom: 10px;
 }
 
 .div2 {
