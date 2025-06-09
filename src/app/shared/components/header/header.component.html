@@ -1,49 +1,75 @@
-<nav class="navbar bg-body-tertiary fixed-top">
-    <div class="container-fluid d-flex justify-content-between">
+<nav class="navbar bg-white shadow-sm fixed-top py-2">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
 
-        <button class="navbar-toggler order-1" type="button" data-bs-toggle="offcanvas"
+        <!-- Toggle button -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="navbar-brand ms-auto order-2">
-            <i class="bi bi-bell me-4 fs-2"></i>
-            <i class="bi bi-person-circle fs-2"></i>
+        <!-- Right side icons -->
+        <div class="navbar-brand ms-auto d-flex align-items-center gap-4">
+            <i class="bi bi-bell fs-4 text-dark position-relative"></i>
+            <i class="bi bi-person-circle fs-4 text-dark"></i>
         </div>
 
+        <!-- Offcanvas menu -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
             aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-                <img class="offcanvas-title img-fluid me-auto" id="offcanvasNavbarLabel" src="/header/logo.png" alt="" style="max-height: 100px;">
+            <div class="offcanvas-header border-bottom">
+                <img class="img-fluid me-auto" id="offcanvasNavbarLabel" src="/header/logo.png" alt="Logo"
+                    style="max-height: 70px;">
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+            <div class="offcanvas-body d-flex flex-column p-0">
+                <ul class="navbar-nav flex-grow-1 px-3 py-2">
                     <li class="nav-item">
-                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/dashboard'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/dashboard')"><i class="bi bi-body-text me-2"></i>Dashboard</a>
+                        <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
+                            [ngClass]="{'active': currentRoute === '/dashboard'}" data-bs-dismiss="offcanvas"
+                            (click)="navigateTo('/dashboard')">
+                            <i class="bi bi-body-text me-2 fs-5"></i> Dashboard
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/list'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/list')"><i class="bi bi-people me-2"></i>Users</a>
+                        <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
+                            [ngClass]="{'active': currentRoute === '/list'}" data-bs-dismiss="offcanvas"
+                            (click)="navigateTo('/list')">
+                            <i class="bi bi-people me-2 fs-5"></i> Users
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/bookings'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/bookings')"><i class="bi bi-calendar3 me-2"></i>Bookings</a>
+                        <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
+                            [ngClass]="{'active': currentRoute === '/bookings'}" data-bs-dismiss="offcanvas"
+                            (click)="navigateTo('/bookings')">
+                            <i class="bi bi-calendar3 me-2 fs-5"></i> Bookings
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/plans'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/plans')"><i class="bi bi-folder2-open me-2"></i>Plans</a>
+                        <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
+                            [ngClass]="{'active': currentRoute === '/plans'}" data-bs-dismiss="offcanvas"
+                            (click)="navigateTo('/plans')">
+                            <i class="bi bi-folder2-open me-2 fs-5"></i> Plans
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" [ngClass]="{'active': currentRoute === '/chat'}" data-bs-dismiss="offcanvas" (click)="navigateTo('/chat')"><i class="bi bi-chat-right me-2"></i>Chat</a>
+                        <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
+                            [ngClass]="{'active': currentRoute === '/chat'}" data-bs-dismiss="offcanvas"
+                            (click)="navigateTo('/chat')">
+                            <i class="bi bi-chat-right me-2 fs-5"></i> Chat
+                        </a>
                     </li>
                 </ul>
-            </div>
-            <div class="details d-flex align-items-center p-3 border-top mt-auto">
-                <i class="bi bi-person-circle fs-2 me-3"></i>
-                <div>
-                    <h6 class="mb-0">User</h6>
-                    <small class="text-muted">user&#64;gmail.com</small>
+
+                <!-- Footer -->
+                <div class="details d-flex align-items-center px-3 py-3 border-top bg-light mt-auto">
+                    <i class="bi bi-person-circle fs-4 me-3 text-secondary"></i>
+                    <div>
+                        <h6 class="mb-0 fw-semibold">User</h6>
+                        <small class="text-muted">user&#64;gmail.com</small>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
 </nav>

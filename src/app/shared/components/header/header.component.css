@@ -1,15 +1,42 @@
+.navbar-toggler {
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    border-radius: 6px;
+}
+
+.navbar-toggler:hover {
+    background-color: rgba(57, 63, 225, 0.15);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(57, 63, 225, 0.4);
+}
+
 .nav-link {
-  cursor: pointer;
-    margin: 5px;
-    padding: 1rem;
+    cursor: pointer;
+    padding: 0.75rem 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 10px;
+    color: #333;
+    margin-bottom: 2px;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: #393fe1;
-  font-weight: 500;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  padding: 1rem;
+    background: linear-gradient(to right, #393fe1, #4f59f5);
+    color: #fff !important;
+}
+
+.navbar-toggler {
+    outline: none;
+    box-shadow: none;
+}
+
+.offcanvas {
+    width: 280px;
+}
+
+.details h6 {
+    font-size: 1rem;
+}
+
+.details small {
+    font-size: 0.85rem;
 }
