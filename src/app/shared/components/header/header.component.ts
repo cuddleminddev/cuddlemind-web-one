@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-header',
@@ -11,7 +12,7 @@ import { NavigationEnd, Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   currentRoute: string = '';
   currentLabel: string = '';
-  user!:any;
+  user!: any;
 
   private routeLabels: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
@@ -37,7 +38,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     const userString = localStorage.getItem('user');
-    this.user = userString ? JSON.parse(userString) : null;    
+    this.user = userString ? JSON.parse(userString) : null;
   }
 
   setCurrentLabel(url: string) {
@@ -49,9 +50,22 @@ export class HeaderComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  logout(){
-    localStorage.removeItem('user');
-    localStorage.removeItem('access_token');
-    this.navigateTo('/login')
+  logout() {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+        this.navigateTo('/login')
+      }
+    });
   }
 }
