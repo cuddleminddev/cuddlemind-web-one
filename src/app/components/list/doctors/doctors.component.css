@@ -42,6 +42,7 @@ input.form-control:focus {
 }
 
 .table-responsive {
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 0.5rem;
+    overflow-x: auto;
 }
