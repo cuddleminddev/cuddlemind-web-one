@@ -1,1 +1,39 @@
-<p>chat works!</p>
+<div class="chat-container">
+    <!-- Left Panel -->
+    <div class="chat-requests">
+        <div class="request-header">Chats</div>
+        <ul class="request-list">
+            <li *ngFor="let user of chatRequests" class="request-item" [class.active]="user === activeRequest"
+                (click)="selectRequest(user)">
+                {{ user }}
+            </li>
+        </ul>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="chat-screen">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="user-info">
+                <span class="user-name">{{ selectedUser.name }}</span>
+                <span class="user-status">{{ selectedUser.status }}</span>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div #messagesEnd class="chat-messages">
+            <div *ngFor="let msg of messages" class="message" [ngClass]="msg.type">
+                {{ msg.text }}
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input">
+            <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage"
+                (keydown.enter)="sendMessage()" />
+            <button (click)="sendMessage()">
+                <i class="send-icon">&#9658;</i>
+            </button>
+        </div>
+    </div>
+</div>
