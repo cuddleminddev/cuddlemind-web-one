@@ -17,7 +17,7 @@ export class ListService {
     return this.http.get(`${this.baseUrl}?page=${page}&limit=${limit}&role`)
   }
 
-  getAllAdmins(page: number, limit: number, role: string): Observable<any> {        
+  getUserTypes(page: number, limit: number, role: string): Observable<any> {        
     return this.http.get(`${this.baseUrl}?page=${page}&limit=${limit}&role=${role}`)
   }
 

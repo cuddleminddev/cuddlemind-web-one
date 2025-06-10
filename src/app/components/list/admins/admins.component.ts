@@ -53,7 +53,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
 
   loadAdmins() {
     this.loading = true;
-    this.service.getAllAdmins(1, 100, 'admin').subscribe({
+    this.service.getUserTypes(1, 100, 'admin').subscribe({
       next: (res) => {
         this.allUsers = res.data.users
         this.loading = false;
