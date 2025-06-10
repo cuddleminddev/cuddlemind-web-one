@@ -1,0 +1,114 @@
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="position-relative w-50 shadow-sm rounded">
+            <input type="text" class="form-control ps-5" placeholder="Search users" [(ngModel)]="filterText" />
+            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+        </div>
+        <button class="btn btn-primary d-flex align-items-center shadow-sm px-4" (click)="openModal(content)">
+            <i class="bi bi-plus-lg me-2"></i>Add
+        </button>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!loading">
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Created At</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of paginatedUsers">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phone || 'N/A' }}</td>
+                        <td>{{ user.createdAt | date:'yyyy-MM-dd':'UTC' }}</td>
+                        <td>{{ user.role.name }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle me-1" title="Edit"
+                                (click)="openModal(content, user)">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete" (click)="deletePlan(user.id)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedUsers.length === 0">
+                        <td colspan="6" class="text-center py-4 text-muted">
+                            <i class="bi bi-folder-x fs-4 me-2"></i> No plans found.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination class="d-flex justify-content-center mt-3" [totalItems]="filteredUsers.length"
+                [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" previousText="‹" nextText="›"
+                [boundaryLinks]="true">
+            </pagination>
+        </div>
+    </div>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">
+            <i class="fas fa-user me-2"></i>{{ editingUserId ? 'Edit User' : 'New User' }}
+        </h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSave(modal)">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+                <input type="text" id="name" class="form-control mb-2" placeholder="Enter name" formControlName="name"
+                    autofocus autocomplete="off" />
+                <div *ngIf="userForm.get('name')?.touched && userForm.get('name')?.invalid" class="text-danger small">
+                    <div *ngIf="userForm.get('name')?.errors?.['required']">Name is required.</div>
+                    <div *ngIf="userForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters.</div>
+                </div>
+
+                <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                <input type="email" id="email" class="form-control mb-2" placeholder="Enter email"
+                    formControlName="email" />
+                <div *ngIf="userForm.get('email')?.touched && userForm.get('email')?.invalid" class="text-danger small">
+                    <div *ngIf="userForm.get('email')?.errors?.['required']">Email is required.</div>
+                    <div *ngIf="userForm.get('email')?.errors?.['email']">Invalid email format.</div>
+                </div>
+
+                <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
+                <select id="role" class="form-control mb-2" formControlName="role" aria-placeholder="Select Role">
+                    <option value="" disabled>Select role</option>
+                    <option *ngFor="let r of allroles" [value]="r.name">{{ r.name }}</option>
+                </select>
+                <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid" class="text-danger small">
+                    <div *ngIf="userForm.get('role')?.errors?.['required']">Role is required.</div>
+                </div>
+
+                <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                <input type="text" id="password" class="form-control" placeholder="Enter password"
+                    formControlName="password" autocomplete="off" [disabled]="!!editingUserId"/>
+                <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid"
+                    class="text-danger small">
+                    <div *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</div>
+                    <div *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="onSave(modal)"
+            [disabled]="userForm.invalid">Save</button>
+    </div>
+</ng-template>

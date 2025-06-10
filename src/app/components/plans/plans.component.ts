@@ -163,7 +163,7 @@ export class PlansComponent implements OnInit {
             this.loadPlanList();
             Swal.fire({
               title: "Deleted!",
-              text: "Your file has been deleted.",
+              text: "Your plan has been deleted.",
               icon: "success"
             });
           },
