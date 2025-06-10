@@ -14,39 +14,12 @@ import { ClientsComponent } from "./clients/clients.component";
   templateUrl: './list.component.html',
   styleUrl: './list.component.css'
 })
-export class ListComponent implements OnInit {
+export class ListComponent {
 
-  allUsers!: any;
+  messages: string[] = [];
 
-  constructor(
-    private service: ListService
-  ) { }
-
-  ngOnInit(): void {
-    // this.loadAllUsers()
-    // this.loadRoles()
+  message(msg: string) {
+    this.messages.push(msg);
   }
-
-  // loadAllUsers() {
-  //   this.service.getAllUsers(1, 5, 'role').subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //     }
-  //   })
-  // }
-
-  // loadRoles() {
-  //   this.service.getRoles().subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //     },
-  //     error: (err) => {
-  //       console.log(err);
-  //     }
-  //   })
-  // }
 
 }

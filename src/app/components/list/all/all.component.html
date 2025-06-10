@@ -40,14 +40,14 @@
                                 (click)="openModal(content, user)">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete" (click)="deletePlan(user.id)">
+                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete" (click)="deleteUser(user.id)">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
                     </tr>
                     <tr *ngIf="paginatedUsers.length === 0">
                         <td colspan="6" class="text-center py-4 text-muted">
-                            <i class="bi bi-folder-x fs-4 me-2"></i> No plans found.
+                            <i class="bi bi-folder-x fs-4 me-2"></i> No users found.
                         </td>
                     </tr>
                 </tbody>

@@ -1,23 +1,43 @@
 <tabset [justified]="true">
 
-    <tab heading="All Users">
-        <app-all></app-all>
-    </tab>
+  <tab heading="All Users" #allTab="tab">
+    <app-all
+      *ngIf="allTab.active"
+      (onInit)="message('All Users component activated')"
+      (onDestroy)="message('All Users component destroyed')"
+    ></app-all>
+  </tab>
 
-    <tab heading="Admins">
-        <app-admins></app-admins>
-    </tab>
+  <tab heading="Admins" #adminsTab="tab">
+    <app-admins
+      *ngIf="adminsTab.active"
+      (onInit)="message('Admins component activated')"
+      (onDestroy)="message('Admins component destroyed')"
+    ></app-admins>
+  </tab>
 
-    <tab heading="Doctors">
-        <app-doctors></app-doctors>
-    </tab>
+  <tab heading="Doctors" #doctorsTab="tab">
+    <app-doctors
+      *ngIf="doctorsTab.active"
+      (onInit)="message('Doctors component activated')"
+      (onDestroy)="message('Doctors component destroyed')"
+    ></app-doctors>
+  </tab>
 
-    <tab heading="Staffs">
-        <app-staffs></app-staffs>
-    </tab>
+  <tab heading="Staffs" #staffsTab="tab">
+    <app-staffs
+      *ngIf="staffsTab.active"
+      (onInit)="message('Staffs component activated')"
+      (onDestroy)="message('Staffs component destroyed')"
+    ></app-staffs>
+  </tab>
 
-    <tab heading="Clients">
-        <app-clients></app-clients>
-    </tab>
+  <tab heading="Clients" #clientsTab="tab">
+    <app-clients
+      *ngIf="clientsTab.active"
+      (onInit)="message('Clients component activated')"
+      (onDestroy)="message('Clients component destroyed')"
+    ></app-clients>
+  </tab>
 
 </tabset>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { ListService } from '../service/list.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,7 +13,11 @@ import Swal from 'sweetalert2';
   templateUrl: './all.component.html',
   styleUrl: './all.component.css'
 })
-export class AllComponent implements OnInit {
+export class AllComponent implements OnInit, OnDestroy {
+
+  @Output() onInit = new EventEmitter<void>();
+  @Output() onDestroy = new EventEmitter<void>();
+
   userForm!: FormGroup;
   allUsers!: any;
   filterText!: string;
@@ -40,13 +44,18 @@ export class AllComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.onInit.emit();
     this.loadAllUsers()
     this.loadRoles()
   }
 
+  ngOnDestroy() {
+    this.onDestroy.emit();
+  }
+
   loadAllUsers() {
     this.loading = true;
-    this.service.getAllUsers(1, 5, 'role').subscribe({
+    this.service.getAllUsers(1, 100, 'role').subscribe({
       next: (res) => {
         this.allUsers = res.data.users
         this.loading = false;
@@ -83,7 +92,6 @@ export class AllComponent implements OnInit {
         name: user.name,
         email: user.email,
         role: user.role.name,
-        // bookings: user.bookingFrequency,
       });
       this.userForm.get('password')?.disable();
     } else {
@@ -159,7 +167,7 @@ export class AllComponent implements OnInit {
     }
   }
 
-  deletePlan(id: string) {
+  deleteUser(id: string) {
     Swal.fire({
       title: "Are you sure?",
       text: "You want to delete this!",
