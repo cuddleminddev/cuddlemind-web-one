@@ -2,12 +2,20 @@
     <!-- Left Panel -->
     <div class="chat-requests">
         <div class="request-header">Chats</div>
-        <ul class="request-list">
-            <li *ngFor="let user of chatRequests" class="request-item" [class.active]="user === activeRequest"
-                (click)="selectRequest(user)">
-                {{ user }}
-            </li>
-        </ul>
+        <div class="chat-requests-body">
+            <ul class="request-list">
+                <li *ngFor="let user of chatRequests" class="request-item" [class.active]="userId === activeRequest"
+                    (click)="selectRequest(user)">
+                    {{ user.userId }}
+                </li>
+                <div *ngIf="chatRequests.length === 0" class="no-requests-message">
+                    No active chat requests.
+                </div>
+            </ul>
+            <div *ngIf="role === 'patient'" class="request-chat-button-wrapper my-3">
+                <button (click)="requestChat()" class="btn btn-primary">Request Chat</button>
+            </div>
+        </div>
     </div>
 
     <!-- Right Panel -->
@@ -24,6 +32,12 @@
         <div #messagesEnd class="chat-messages">
             <div *ngFor="let msg of messages" class="message" [ngClass]="msg.type">
                 {{ msg.text }}
+            </div>
+            <div *ngIf="selectedUser.name" class="no-messages-message">
+                Start a conversation!
+            </div>
+            <div *ngIf="!selectedUser.name || role !== 'patient'" class="no-chat-selected-message">
+                Select a chat to view messages.
             </div>
         </div>
 

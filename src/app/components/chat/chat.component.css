@@ -212,6 +212,20 @@
     transform: translateX(2px);
 }
 
+.no-requests-message,
+.no-messages-message,
+.no-chat-selected-message {
+    text-align: center;
+    color: #888;
+    padding: 20px;
+    font-style: italic;
+}
+
+.request-chat-button-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
 @media (max-width: 768px) {
     .chat-container {
         height: 100vh;
