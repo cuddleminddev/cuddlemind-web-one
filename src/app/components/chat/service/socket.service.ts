@@ -13,13 +13,13 @@ export class SocketService {
       query: { userId, role }
     });
 
-    this.socket.on('connect', () => {
-      console.log('Connected:', this.socket.id);
-    });
+    // this.socket.on('connect', () => {
+    //   console.log('Connected:', this.socket.id);
+    // });
 
-    this.socket.on('disconnect', () => {
-      console.log('Disconnected');
-    });
+    // this.socket.on('disconnect', () => {
+    //   console.log('Disconnected');
+    // });
   }
 
   joinSession(sessionId: string) {
@@ -41,9 +41,7 @@ export class SocketService {
     });
   }
 
-  requestChat(patientId: string) {
-    console.log(patientId);
-    
+  requestChat(patientId: string) {    
     this.socket.emit('request_chat', { patientId });
   }
 

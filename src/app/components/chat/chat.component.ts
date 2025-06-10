@@ -59,6 +59,13 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     this.socketService.onChatStarted().subscribe(data => {
       this.sessionId = data.sessionId;
       this.socketService.joinSession(this.sessionId);
+
+      if (this.role === 'patient') {
+        this.selectedUser = {
+          name: data.consultantName || 'Consultant',
+          status: 'Online'
+        };
+      }
     });
 
     if (this.role === 'patient') {
@@ -105,7 +112,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     this.newMessage = '';
   }
 
-  selectRequest(request: any) {    
+  selectRequest(request: any) {
     this.activeRequest = request.userId;
     this.selectedUser = { name: request.userId, status: 'Online' };
     this.sessionId = request.sessionId;
