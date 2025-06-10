@@ -13,7 +13,7 @@
 
 /* Left Panel */
 .chat-requests {
-    width: 300px;
+    width: 25%;
     background-color: #ced3e5;
     border-right: 1px solid #e0e6ed;
     display: flex;
@@ -61,6 +61,10 @@
     flex-direction: column;
     overflow: scroll;
     background: #fafafa;
+}
+
+.chat-screen.full-width {
+    width: 100%;
 }
 
 /* Header */

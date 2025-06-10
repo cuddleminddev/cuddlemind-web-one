@@ -1,6 +1,6 @@
 <div class="chat-container">
     <!-- Left Panel -->
-    <div class="chat-requests">
+    <div class="chat-requests" *ngIf="!(role === 'patient' && sessionId)">
         <div class="request-header">Chats</div>
         <div class="chat-requests-body">
             <ul class="request-list">
@@ -19,7 +19,7 @@
     </div>
 
     <!-- Right Panel -->
-    <div class="chat-screen">
+    <div class="chat-screen"  [ngClass]="{'full-width': role === 'patient' && sessionId}">
         <!-- Header -->
         <div class="chat-header">
             <div class="user-info">
