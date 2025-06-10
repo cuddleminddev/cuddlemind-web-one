@@ -102,7 +102,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     this.socketService.sendMessage(payload);
 
-    this.messages.push({ type: 'sent', text: this.newMessage });
+    // this.messages.push({ type: 'sent', text: this.newMessage });
     this.newMessage = '';
   }
 
