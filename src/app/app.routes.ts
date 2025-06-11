@@ -25,7 +25,13 @@ export const routes: Routes = [
             { path: 'chat', loadComponent: loadChatComponent, canActivate: [roleGuard], data: { roles: ['admin', 'staff', 'client'] } },
             { path: 'list', loadComponent: loadListComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
             { path: 'bookings', loadComponent: loadBookingsComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
-            { path: '**', loadComponent: loadNotFoundComponent, canActivate: [roleGuard], data: { roles: ['admin', 'staff', 'client'] } }
+            // { path: '**', loadComponent: loadNotFoundComponent, canActivate: [roleGuard], data: { roles: ['admin', 'staff', 'client', 'doctor'] } }
         ]
+    },
+    {
+        path: '**',
+        loadComponent: loadNotFoundComponent,
+        canActivate: [roleGuard],
+        data: { roles: ['admin', 'staff', 'client', 'doctor'] }
     }
 ];
