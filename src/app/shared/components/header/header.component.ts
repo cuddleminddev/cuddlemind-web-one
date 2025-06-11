@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../core/interceptor/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,7 @@ export class HeaderComponent implements OnInit {
   currentRoute: string = '';
   currentLabel: string = '';
   user!: any;
+  role!: any;
 
   private routeLabels: { [key: string]: string } = {
     '/dashboard': 'Dashboard',
@@ -22,7 +24,10 @@ export class HeaderComponent implements OnInit {
     '/chat': 'Chat'
   };
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.currentRoute = this.router.url;
 
     this.router.events.subscribe(() => {
@@ -39,6 +44,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     const userString = localStorage.getItem('user');
     this.user = userString ? JSON.parse(userString) : null;
+    this.role = this.user.role;
   }
 
   setCurrentLabel(url: string) {

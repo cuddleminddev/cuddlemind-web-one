@@ -46,6 +46,7 @@ export class LoginComponent {
 
       this.authService.login(email, password).subscribe({
         next: (response) => {
+          const user = response.data.user;
           this.alertService.showAlert({
             message: 'Login successful!',
             type: 'success',
@@ -54,7 +55,11 @@ export class LoginComponent {
           });
           this.loading = false;
           if (response.status) {
-            this.router.navigate(['/dashboard']);
+            if (user.role === 'staff' || user.role === 'client') {
+              this.router.navigate(['/chat']);
+            } else {
+              this.router.navigate(['/dashboard']);
+            }
           }
         },
         error: (err) => {
@@ -68,9 +73,6 @@ export class LoginComponent {
           console.error('Login error:', err);
         }
       });
-      setTimeout(() => {
-        this.router.navigate(['/dashboard']);
-      }, 1500);
     }
   }
 }

@@ -26,28 +26,28 @@
 
             <div class="offcanvas-body d-flex flex-column p-0">
                 <ul class="navbar-nav flex-grow-1 px-3 py-2">
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="role == 'admin'">
                         <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
                             [ngClass]="{'active': currentRoute === '/dashboard'}" data-bs-dismiss="offcanvas"
                             (click)="navigateTo('/dashboard')">
                             <i class="bi bi-body-text me-2 fs-5"></i> Dashboard
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="role == 'admin'">
                         <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
                             [ngClass]="{'active': currentRoute === '/list'}" data-bs-dismiss="offcanvas"
                             (click)="navigateTo('/list')">
                             <i class="bi bi-people me-2 fs-5"></i> Users
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="role == 'admin'">
                         <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
                             [ngClass]="{'active': currentRoute === '/bookings'}" data-bs-dismiss="offcanvas"
                             (click)="navigateTo('/bookings')">
                             <i class="bi bi-calendar3 me-2 fs-5"></i> Bookings
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="role == 'admin'">
                         <a class="nav-link fs-5 fw-semibold d-flex align-items-center"
                             [ngClass]="{'active': currentRoute === '/plans'}" data-bs-dismiss="offcanvas"
                             (click)="navigateTo('/plans')">

@@ -13,11 +13,11 @@ export class ListService {
     private http: HttpClient
   ) { }
 
-  getAllUsers(page: number, limit: number, role: string): Observable<any> {    
+  getAllUsers(page: number, limit: number, role: string): Observable<any> {
     return this.http.get(`${this.baseUrl}?page=${page}&limit=${limit}&role`)
   }
 
-  getUserTypes(page: number, limit: number, role: string): Observable<any> {        
+  getUserTypes(page: number, limit: number, role: string): Observable<any> {
     return this.http.get(`${this.baseUrl}?page=${page}&limit=${limit}&role=${role}`)
   }
 
@@ -35,6 +35,14 @@ export class ListService {
 
   deleteUser(id: string) {
     return this.http.delete(`${this.baseUrl}/${id}`)
+  }
+
+  getCurretnUser() {
+    return this.http.get(`${this.baseUrl}/profile`)
+  }
+
+  updateCurrentUser(itm: any) {
+    return this.http.patch(`${this.baseUrl}/profile`, itm)
   }
 
 }
