@@ -1,0 +1,39 @@
+.dashboard-card {
+  background: linear-gradient(135deg, #ffffff, #f9f9f9);
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+}
+
+.icon-box {
+  font-size: 2.4rem;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.card-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.doughnutchart canvas {
+  width: 100% !important;
+  max-height: 300px;
+}
