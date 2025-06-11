@@ -169,7 +169,7 @@
     border-color: #1a73e8;
 }
 
-.chat-input button {
+.chat-input .send-btn {
     background-color: #1a73e8;
     color: white;
     border: none;
@@ -185,13 +185,17 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.chat-input button:hover {
+.chat-input .send-btn:hover {
     background-color: #155bb5;
     transform: translateY(-1px);
 }
 
-.chat-input button:hover .send-icon {
+.chat-input .send-btn:hover .send-icon {
     animation: pulse 0.4s ease-in-out;
+}
+
+.chat-input .send-btn:active {
+    transform: translateY(1px);
 }
 
 @keyframes pulse {
@@ -208,12 +212,25 @@
     }
 }
 
-.chat-input button:active {
-    transform: translateY(1px);
-}
-
 .send-icon {
     transform: translateX(2px);
+}
+
+.end-chat-btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-radius: 25px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.end-chat-btn:hover {
+    background-color: #c82333;
 }
 
 .no-requests-message,

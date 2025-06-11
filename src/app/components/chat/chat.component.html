@@ -19,7 +19,7 @@
     </div>
 
     <!-- Right Panel -->
-    <div class="chat-screen"  [ngClass]="{'full-width': role === 'patient' && sessionId}">
+    <div class="chat-screen" [ngClass]="{'full-width': role === 'patient' && sessionId}">
         <!-- Header -->
         <div class="chat-header">
             <div class="user-info">
@@ -43,9 +43,12 @@
 
         <!-- Input -->
         <div class="chat-input">
-            <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage"
-                (keydown.enter)="sendMessage()" />
-            <button (click)="sendMessage()">
+            <button *ngIf="role === 'consultant' && sessionId" class="end-chat-btn" (click)="endChat()">
+                End Chat
+            </button>
+            <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (keydown.enter)="sendMessage()"
+                [disabled]="!sessionId" />
+            <button class="send-btn" (click)="sendMessage()" [disabled]="!sessionId">
                 <i class="send-icon">&#9658;</i>
             </button>
         </div>

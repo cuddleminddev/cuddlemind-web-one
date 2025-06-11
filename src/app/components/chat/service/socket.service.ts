@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 export class SocketService {
   private socket!: Socket;
 
-  constructor() {}
+  constructor() { }
 
   connect(userId: string, role: 'consultant' | 'patient') {
     this.socket = io('https://api.cuddlemind.com/', {
@@ -41,7 +41,7 @@ export class SocketService {
     });
   }
 
-  requestChat(patientId: string) {    
+  requestChat(patientId: string) {
     this.socket.emit('request_chat', { patientId });
   }
 
@@ -69,5 +69,11 @@ export class SocketService {
 
   endChat(sessionId: string) {
     this.socket.emit('end_chat', { sessionId });
+  }
+
+  onChatEnded(): Observable<void> {
+    return new Observable(observer => {
+      this.socket.on('chat_ended', () => observer.next());
+    });
   }
 }

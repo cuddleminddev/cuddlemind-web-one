@@ -3,6 +3,7 @@ import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@ang
 import { FormsModule } from '@angular/forms';
 import { SocketService } from './service/socket.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-chat',
@@ -68,6 +69,20 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       }
     });
 
+    this.socketService.onChatEnded().subscribe(() => {
+      this.alertService.showAlert({
+        message: 'Chat session has ended.',
+        type: 'info',
+        autoDismiss: true,
+        duration: 4000
+      });
+
+      this.messages.push({ type: 'system', text: 'Chat has ended.' });
+      this.sessionId = '';
+      this.selectedUser = { name: '', status: '' };
+      this.activeRequest = '';
+    });
+
     if (this.role === 'patient') {
       // this.socketService.requestChat(this.userId);
       this.socketService.onNoConsultants().subscribe(() => {
@@ -108,7 +123,6 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     this.socketService.sendMessage(payload);
 
-    // this.messages.push({ type: 'sent', text: this.newMessage });
     this.newMessage = '';
   }
 
@@ -123,6 +137,34 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   requestChat() {
     this.socketService.requestChat(this.userId);
+  }
+
+  endChat() {
+    if (this.sessionId) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You want to end this session",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+        cancelButtonText: "No"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          
+          this.socketService.endChat(this.sessionId);
+          this.messages.push({ type: 'system', text: 'You ended the chat.' });
+
+          if (this.role === 'consultant') {
+            this.chatRequests = this.chatRequests.filter(req => req.sessionId !== this.sessionId);
+          }
+          this.sessionId = '';
+          this.selectedUser = { name: '', status: '' };
+          this.activeRequest = '';
+        }
+      });
+    }
   }
 
 }
