@@ -4,9 +4,9 @@
             <input type="text" class="form-control ps-5" placeholder="Search clients" [(ngModel)]="filterText" />
             <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
         </div>
-        <button class="btn btn-primary d-flex align-items-center shadow-sm px-4" (click)="openModal(content)">
+        <!-- <button class="btn btn-primary d-flex align-items-center shadow-sm px-4" (click)="openModal(content)">
             <i class="bi bi-plus-lg me-2"></i>Add
-        </button>
+        </button> -->
     </div>
 
     <div *ngIf="loading" class="text-center py-5">
@@ -92,7 +92,7 @@
                     <div *ngIf="userForm.get('role')?.errors?.['required']">Role is required.</div>
                 </div>
 
-                <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                <!-- <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
                 <input type="text" id="password" class="form-control" placeholder="Enter password"
                     formControlName="password" autocomplete="off" [disabled]="!!editingUserId" />
                 <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid"
@@ -100,7 +100,7 @@
                     <div *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</div>
                     <div *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.
                     </div>
-                </div>
+                </div> -->
             </div>
         </form>
     </div>

@@ -1,1 +1,83 @@
-<p>bookings works!</p>
+<div class="container-fluid">
+    <div class="row mb-4 align-items-center">
+        <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-0">
+            <label for="doctorSelect" class="form-label">Filter by Doctor</label>
+            <select id="doctorSelect" class="form-select" [(ngModel)]="selectedDoctorId" (change)="filterBookings()">
+                <option value="">All Doctors</option>
+                <option *ngFor="let doc of doctorList" [value]="doc.id">{{ doc.name }}</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-0">
+            <label for="patientSelect" class="form-label">Filter by Patient</label>
+            <select id="patientSelect" class="form-select" [(ngModel)]="selectedPatientId" (change)="filterBookings()">
+                <option value="">All Patients</option>
+                <option *ngFor="let pat of patientList" [value]="pat.id">{{ pat.name }}</option>
+            </select>
+        </div>
+        <!-- Optional: Add button in another col if needed -->
+        <!-- <div class="col-12 col-md-auto">
+      <button class="btn btn-primary w-100">Add</button>
+    </div> -->
+    </div>
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!loading">
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Type</th>
+                        <th>Payment Type</th>
+                        <th>Booked At</th>
+                        <th>Scheduled At</th>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let itm of paginatedBookings">
+                        <td>{{ itm.id }}</td>
+                        <td>{{ itm.type }}</td>
+                        <td>{{ itm.paymentType }}</td>
+                        <td>{{ itm.createdAt | date:'yyyy-MM-dd':'UTC' }}</td>
+                        <td>{{itm.scheduledAt | date:'yyyy-MM-dd':'UTC' }}</td>
+                        <td>{{itm.doctor.name}}</td>
+                        <td>{{itm.patient.name}}</td>
+                        <td>
+                            <span class="badge px-3 py-2"
+                                [ngClass]="itm.status === 'confirmed' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'">
+                                {{ itm.status === 'confirmed' ? 'Confirmed' : 'Pending' }}
+                            </span>
+                        </td>
+                        <td>
+                            <!-- <button class="btn btn-sm btn-outline-secondary rounded-circle me-1" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </button> -->
+                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete"
+                                (click)="deleteBooking(itm)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="paginatedBookings.length === 0">
+                        <td colspan="9" class="text-center py-4 text-muted">
+                            <i class="bi bi-folder-x fs-4 me-2"></i> No bookings found.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination class="d-flex justify-content-center mt-3" [totalItems]="filteredBookings.length"
+                [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" previousText="‹" nextText="›"
+                [boundaryLinks]="true">
+            </pagination>
+        </div>
+    </div>
+</div>

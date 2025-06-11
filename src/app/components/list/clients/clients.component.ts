@@ -38,7 +38,7 @@ export class ClientsComponent {
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       role: [{ value: 'client', disabled: true }, Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      // password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -79,13 +79,13 @@ export class ClientsComponent {
         name: user.name,
         email: user.email,
       });
-      this.userForm.get('password')?.disable();
+      // this.userForm.get('password')?.disable();
       this.userForm.get('role')?.setValue('client');
 
     } else {
       this.editingUserId = null;
       this.userForm.reset();
-      this.userForm.get('password')?.enable();
+      // this.userForm.get('password')?.enable();
       this.userForm.get('role')?.setValue('client');
 
     }
@@ -102,9 +102,9 @@ export class ClientsComponent {
         role: formUser.role,
       };
 
-      if (!this.editingUserId) {
-        userData.password = formUser.password;
-      }
+      // if (!this.editingUserId) {
+      //   userData.password = formUser.password;
+      // }
 
       if (this.editingUserId) {
         this.service.updateUser(this.editingUserId, userData).subscribe({
