@@ -36,6 +36,7 @@
                         <th>Payment Type</th>
                         <th>Booked At</th>
                         <th>Scheduled At</th>
+                        <th>Scheduled Time</th>
                         <th>Doctor</th>
                         <th>Patient</th>
                         <th>Status</th>
@@ -49,6 +50,7 @@
                         <td>{{ itm.paymentType }}</td>
                         <td>{{ itm.createdAt | date:'yyyy-MM-dd':'UTC' }}</td>
                         <td>{{itm.scheduledAt | date:'yyyy-MM-dd':'UTC' }}</td>
+                        <td>{{itm.scheduledAt | date:'HH:mm':'UTC'}}</td>
                         <td>{{itm.doctor.name}}</td>
                         <td>{{itm.patient.name}}</td>
                         <td>
