@@ -21,9 +21,22 @@ export class BookingsService {
   }
 
   getFilteredBookingList(itm: any) {
-    const patID = itm.patiantID;
-    const docID = itm.doctorID;
+    const params: string[] = [];
 
-    return this.http.get(`${this.baseUrl}?patientId=${patID}&doctorId=${docID}`)
+    if (itm.patiantID) {
+      params.push(`patientId=${itm.patiantID}`);
+    }
+    if (itm.doctorID) {
+      params.push(`doctorId=${itm.doctorID}`);
+    }
+    if (itm.startDate) {
+      params.push(`fromDate=${itm.startDate}`);
+    }
+    if (itm.endDate) {
+      params.push(`toDate=${itm.endDate}`);
+    }
+
+    const queryString = params.length ? `?${params.join('&')}` : '';
+    return this.http.get(`${this.baseUrl}${queryString}`);
   }
 }

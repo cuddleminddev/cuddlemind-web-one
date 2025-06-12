@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BookingsService } from './service/bookings.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
 import Swal from 'sweetalert2';
@@ -11,7 +11,14 @@ import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-bookings',
-  imports: [CommonModule, ReactiveFormsModule, NgbTooltipModule, FormsModule, PaginationModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgbTooltipModule,
+    FormsModule,
+    PaginationModule,
+    NgbDatepickerModule
+  ],
   templateUrl: './bookings.component.html',
   styleUrl: './bookings.component.css'
 })
@@ -28,6 +35,8 @@ export class BookingsComponent implements OnInit {
   patientList!: any;
   selectedDoctorId: string = '';
   selectedPatientId: string = '';
+  selectedStartDate: any = '';
+  selectedEndDate: any = '';
 
   constructor(
     private service: BookingsService,
@@ -110,10 +119,20 @@ export class BookingsComponent implements OnInit {
 
   filterBookings() {
     this.loading = true;
+
+    const formatToISOString = (dateObj: any): string | null => {
+      if (!dateObj?.year || !dateObj?.month || !dateObj?.day) return null;
+      const date = new Date(Date.UTC(dateObj.year, dateObj.month - 1, dateObj.day));
+      return date.toISOString();
+    };
+
     let itm = {
       patiantID: this.selectedPatientId,
-      doctorID: this.selectedDoctorId
+      doctorID: this.selectedDoctorId,
+      startDate: formatToISOString(this.selectedStartDate),
+      endDate: formatToISOString(this.selectedEndDate)
     }
+
     this.service.getFilteredBookingList(itm).subscribe({
       next: (res: any) => {
         this.bookings = res.data || [];
@@ -130,6 +149,15 @@ export class BookingsComponent implements OnInit {
         });
       }
     });
+  }
+
+  clearFilters() {
+    this.selectedDoctorId = '';
+    this.selectedPatientId = '';
+    this.selectedStartDate = '';
+    this.selectedEndDate = '';
+
+    this.loadBookingsList();
   }
 
   get paginatedBookings(): any[] {
