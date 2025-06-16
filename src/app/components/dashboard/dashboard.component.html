@@ -1,5 +1,12 @@
 <div class="container-fluid my-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div *ngIf="!loading && datas" class="row row-cols-1 row-cols-md-4 g-4">
         <div class="col">
             <div class="card dashboard-card p-3">
                 <div class="d-flex align-items-center">
@@ -8,7 +15,7 @@
                     </div>
                     <div>
                         <div class="card-title mb-1">Total Earnings</div>
-                        <div class="card-text">₹120,500</div>
+                        <div class="card-text">{{datas?.totalEarnings}}</div>
                     </div>
                 </div>
             </div>
@@ -21,7 +28,7 @@
                     </div>
                     <div>
                         <div class="card-title mb-1">Total Patients</div>
-                        <div class="card-text">1,000</div>
+                        <div class="card-text">{{datas?.totalPatients}}</div>
                     </div>
                 </div>
             </div>
@@ -34,7 +41,7 @@
                     </div>
                     <div>
                         <div class="card-title mb-1">Total Bookings</div>
-                        <div class="card-text">1,000</div>
+                        <div class="card-text">{{datas?.totalBookings}}</div>
                     </div>
                 </div>
             </div>
@@ -47,7 +54,7 @@
                     </div>
                     <div>
                         <div class="card-title mb-1">Total Doctors</div>
-                        <div class="card-text">100</div>
+                        <div class="card-text">{{datas?.totalDoctors}}</div>
                     </div>
                 </div>
             </div>
@@ -57,7 +64,7 @@
     <div class="row mt-5">
         <div class="col-md-6">
             <div class="card dashboard-card p-4 h-100">
-                <h5 class="mb-3">Booking Distribution</h5>
+                <h5 class="mb-3">Distribution</h5>
                 <div class="doughnutchart">
                     <canvas #doughnutCanvas></canvas>
                 </div>
@@ -65,8 +72,10 @@
         </div>
         <div class="col-md-6">
             <div class="card dashboard-card p-4 h-100">
-                <h5 class="mb-3">Other Insights</h5>
-                <p>Put any additional content here...</p>
+                <h5 class="mb-3">Bookings</h5>
+                <div class="barchart">
+                    <canvas #barCanvas></canvas>
+                </div>
             </div>
         </div>
     </div>
