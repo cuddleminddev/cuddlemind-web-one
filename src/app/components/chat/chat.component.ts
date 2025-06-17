@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SocketService } from './service/socket.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
 import Swal from 'sweetalert2';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-chat',
@@ -13,10 +14,14 @@ import Swal from 'sweetalert2';
 })
 export class ChatComponent implements AfterViewChecked, OnInit {
   @ViewChild('messagesEnd') private messagesEndRef!: ElementRef;
+  public showRequestsOnMobile = false;
+  screenIsWide = window.innerWidth > 991;
+  @HostListener('window:resize')
 
   chatRequests: { sessionId: string; userId: string, patientName?: string }[] = [];
   activeRequest = '';
   selectedUser: { name: string; status: string } = { name: '', status: '' };
+unseenChatRequestCount = 0;
 
   sessionId = '';
   messages: any[] = [];
@@ -28,10 +33,12 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   constructor(
     private socketService: SocketService,
     private alertService: AlertService,
-
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
+    this.onResize()
+
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsed = JSON.parse(storedUser);
@@ -98,8 +105,27 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     if (this.role === 'consultant') {
       this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName }) => {
         this.chatRequests.push({ sessionId, userId: patientId, patientName });
+        this.unseenChatRequestCount++;
       });
     }
+  }
+
+  onResize() {
+    this.screenIsWide = window.innerWidth > 991;
+    if (this.screenIsWide) {
+      this.showRequestsOnMobile = false; // Auto-close requests on resize to large
+    }
+  }
+
+  openChatRequests(content: any) {
+    this.unseenChatRequestCount = 0;
+    this.modalService.open(content, {
+      centered: true,
+      scrollable: true,
+      size: 'lg',
+      backdrop: true,
+      animation: true
+    });
   }
 
   ngAfterViewChecked() {
@@ -132,6 +158,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     this.sessionId = request.sessionId;
     this.messages = [];
 
+    this.unseenChatRequestCount = 0;
     this.socketService.acceptChat(request.sessionId, this.userId);
   }
 
@@ -152,7 +179,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         cancelButtonText: "No"
       }).then((result) => {
         if (result.isConfirmed) {
-          
+
           this.socketService.endChat(this.sessionId);
           this.messages.push({ type: 'system', text: 'You ended the chat.' });
 
@@ -165,6 +192,10 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         }
       });
     }
+  }
+
+  toggleRequests() {
+    this.showRequestsOnMobile = !this.showRequestsOnMobile;
   }
 
 }
