@@ -27,6 +27,8 @@ export class ClientsComponent {
 
   currentPage = 1;
   itemsPerPage = 10;
+  currentApiPage: number = 1;
+  fetchedPages = new Set<number>();
 
   constructor(
     private service: ListService,
@@ -55,10 +57,13 @@ export class ClientsComponent {
     this.loading = true;
     this.service.getUserTypes(1, 100, 'client').subscribe({
       next: (res) => {
-        this.allUsers = res.data.users
+        const newUsers = res.data.users || [];
+        this.allUsers = [...(this.allUsers || []), ...newUsers];
+        this.fetchedPages.add(this.currentApiPage);
         this.loading = false;
       },
       error: (err) => {
+        this.loading = false;
         this.alertService.showAlert({
           message: 'Failed to fetch client. Please try again.',
           type: 'error',
@@ -67,6 +72,16 @@ export class ClientsComponent {
         });
       }
     })
+  }
+
+  onPageChanged(page: number) {
+    this.currentPage = page;
+
+    const maxLoadedPage = this.currentApiPage * 100 / this.itemsPerPage;
+    if (page > maxLoadedPage) {
+      this.currentApiPage += 1;
+      this.loadclients();
+    }
   }
 
   openModal(content: any, user?: any) {

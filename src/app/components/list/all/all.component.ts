@@ -28,6 +28,8 @@ export class AllComponent implements OnInit, OnDestroy {
 
   currentPage = 1;
   itemsPerPage = 10;
+  currentApiPage: number = 1;
+  fetchedPages = new Set<number>();
 
   constructor(
     private service: ListService,
@@ -55,12 +57,15 @@ export class AllComponent implements OnInit, OnDestroy {
 
   loadAllUsers() {
     this.loading = true;
-    this.service.getAllUsers(1, 100, 'role').subscribe({
+    this.service.getAllUsers(this.currentApiPage, 100, 'role').subscribe({
       next: (res) => {
-        this.allUsers = res.data.users
+        const newUsers = res.data.users || [];
+        this.allUsers = [...(this.allUsers || []), ...newUsers];
+        this.fetchedPages.add(this.currentApiPage);
         this.loading = false;
       },
       error: (err) => {
+        this.loading = false;
         this.alertService.showAlert({
           message: 'Failed to fetch users. Please try again.',
           type: 'error',
@@ -80,6 +85,16 @@ export class AllComponent implements OnInit, OnDestroy {
         console.error(err);
       }
     })
+  }
+
+  onPageChanged(page: number) {
+    this.currentPage = page;
+
+    const maxLoadedPage = this.currentApiPage * 100 / this.itemsPerPage;
+    if (page > maxLoadedPage) {
+      this.currentApiPage += 1;
+      this.loadAllUsers();
+    }
   }
 
   openModal(content: any, user?: any) {
