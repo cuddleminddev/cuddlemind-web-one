@@ -40,7 +40,8 @@
                                 (click)="openModal(content, user)">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete" (click)="deleteUser(user.id)">
+                            <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete"
+                                (click)="deleteUser(user.id)">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
@@ -53,8 +54,8 @@
                 </tbody>
             </table>
             <pagination class="d-flex justify-content-center mt-3" [totalItems]="filteredUsers.length"
-                [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" (pageChanged)="onPageChanged($event.page)" previousText="‹" nextText="›"
-                [boundaryLinks]="true">
+                [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" (pageChanged)="onPageChanged($event.page)"
+                previousText="‹" nextText="›" [boundaryLinks]="true">
             </pagination>
         </div>
     </div>
@@ -86,21 +87,23 @@
                 </div>
 
                 <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
-                <select id="role" class="form-control mb-2" formControlName="role" aria-placeholder="Select Role">
-                    <option value="" disabled>Select role</option>
+                <select id="role" class="form-select mb-2" formControlName="role">
+                    <option value="" selected disabled>Select role</option>
                     <option *ngFor="let r of allroles" [value]="r.name">{{ r.name }}</option>
                 </select>
                 <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid" class="text-danger small">
                     <div *ngIf="userForm.get('role')?.errors?.['required']">Role is required.</div>
                 </div>
 
-                <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
-                <input type="text" id="password" class="form-control" placeholder="Enter password"
-                    formControlName="password" autocomplete="off" [disabled]="!!editingUserId"/>
-                <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid"
-                    class="text-danger small">
-                    <div *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</div>
-                    <div *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.
+                <div *ngIf="shouldShowPasswordField()">
+                    <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+                    <input type="text" id="password" class="form-control" placeholder="Enter password"
+                        formControlName="password" autocomplete="off" [disabled]="!!editingUserId" />
+                    <div *ngIf="userForm.get('password')?.touched && userForm.get('password')?.invalid"
+                        class="text-danger small">
+                        <div *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</div>
+                        <div *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6
+                            characters.</div>
                     </div>
                 </div>
             </div>

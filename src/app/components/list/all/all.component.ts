@@ -49,6 +49,20 @@ export class AllComponent implements OnInit, OnDestroy {
     this.onInit.emit();
     this.loadAllUsers()
     this.loadRoles()
+
+    this.userForm.get('role')?.valueChanges.subscribe((roleValue) => {
+      const passwordControl = this.userForm.get('password');
+
+      if (roleValue === 'client') {
+        passwordControl?.clearValidators();
+        passwordControl?.setValidators([]);
+      } else if (!this.editingUserId) {
+        // Add validators only if we're creating a new user
+        passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
+      }
+
+      passwordControl?.updateValueAndValidity();
+    });
   }
 
   ngOnDestroy() {
@@ -118,17 +132,26 @@ export class AllComponent implements OnInit, OnDestroy {
     this.modalService.open(content);
   }
 
+  shouldShowPasswordField(): boolean {
+    const role = this.userForm.get('role')?.value;
+    return role !== 'client' && !this.editingUserId;
+  }
+
   onSave(modal: any): void {
     if (this.userForm.valid) {
-      const formUser = this.userForm.getRawValue();;
+      const formUser = this.userForm.getRawValue();
       const userData: any = {
         name: formUser.name,
         email: formUser.email,
         role: formUser.role,
       };
 
-      if (!this.editingUserId) {
+      if (!this.editingUserId && formUser.password) {
         userData.password = formUser.password;
+      }
+
+      if (userData.role === 'client') {
+        userData.password = '';
       }
 
       if (this.editingUserId) {
