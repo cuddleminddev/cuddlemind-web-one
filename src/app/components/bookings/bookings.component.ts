@@ -156,6 +156,7 @@ export class BookingsComponent implements OnInit {
     this.selectedPatientId = '';
     this.selectedStartDate = '';
     this.selectedEndDate = '';
+    this.currentPage = 1;
 
     this.loadBookingsList();
   }
