@@ -21,7 +21,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   chatRequests: { sessionId: string; userId: string, patientName?: string }[] = [];
   activeRequest = '';
   selectedUser: { name: string; status: string } = { name: '', status: '' };
-unseenChatRequestCount = 0;
+  unseenChatRequestCount = 0;
 
   sessionId = '';
   messages: any[] = [];
@@ -106,6 +106,25 @@ unseenChatRequestCount = 0;
       this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName }) => {
         this.chatRequests.push({ sessionId, userId: patientId, patientName });
         this.unseenChatRequestCount++;
+      });
+
+      this.socketService.onChatAlreadyTaken().subscribe(({ sessionId }: any) => {
+        this.alertService.showAlert({
+          message: 'This chat has already been taken by another consultant.',
+          type: 'warning',
+          autoDismiss: true,
+          duration: 4000
+        });
+
+        this.chatRequests = this.chatRequests.filter(req => req.sessionId !== sessionId);
+        if (this.sessionId === sessionId) {
+          this.activeRequest = '';
+          this.selectedUser = { name: '', status: '' };
+          this.sessionId = '';
+          this.messages = [];
+          this.newMessage = '';
+          // this.showChat = false;
+        }
       });
     }
   }

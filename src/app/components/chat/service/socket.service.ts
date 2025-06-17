@@ -76,4 +76,10 @@ export class SocketService {
       this.socket.on('chat_ended', () => observer.next());
     });
   }
+
+  onChatAlreadyTaken() {
+    return new Observable(observer => {
+      this.socket.on('chat_already_taken', data => observer.next(data));
+    });
+  }
 }
