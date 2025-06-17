@@ -6,7 +6,7 @@
             <ul class="request-list">
                 <li *ngFor="let user of chatRequests" class="request-item" [class.active]="userId === activeRequest"
                     (click)="selectRequest(user)">
-                    {{ user.userId }}
+                    {{ user.patientName || user.userId }}
                 </li>
                 <div *ngIf="chatRequests.length === 0 && role !== 'patient'" class="no-requests-message">
                     No active chat requests.

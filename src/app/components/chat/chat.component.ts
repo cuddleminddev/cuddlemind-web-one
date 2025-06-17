@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 export class ChatComponent implements AfterViewChecked, OnInit {
   @ViewChild('messagesEnd') private messagesEndRef!: ElementRef;
 
-  chatRequests: { sessionId: string; userId: string }[] = [];
+  chatRequests: { sessionId: string; userId: string, patientName?: string }[] = [];
   activeRequest = '';
   selectedUser: { name: string; status: string } = { name: '', status: '' };
 
@@ -96,8 +96,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     }
 
     if (this.role === 'consultant') {
-      this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId }) => {
-        this.chatRequests.push({ sessionId, userId: patientId });
+      this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName }) => {
+        this.chatRequests.push({ sessionId, userId: patientId, patientName });
       });
     }
   }
@@ -128,7 +128,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   selectRequest(request: any) {
     this.activeRequest = request.userId;
-    this.selectedUser = { name: request.userId, status: 'Online' };
+    this.selectedUser = { name: request.patientName, status: 'Online' };
     this.sessionId = request.sessionId;
     this.messages = [];
 
