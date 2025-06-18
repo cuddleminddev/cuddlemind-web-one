@@ -66,10 +66,10 @@
             <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (keydown.enter)="sendMessage()"
                 [disabled]="!sessionId" />
             <button *ngIf="role === 'consultant'" class="plus-btn" (click)="openDoctorListModal(doctorListModal)"
-                type="button">
+                type="button" [disabled]="!sessionId" title="Active Doctors List">
                 <i class="bi bi-plus-circle"></i>
             </button>
-            <button class="send-btn" (click)="sendMessage()" [disabled]="!sessionId">
+            <button class="send-btn" (click)="sendMessage()" [disabled]="!sessionId" title="Send Message">
                 <i class="bi bi-caret-right-fill send-icon"></i>
             </button>
         </div>

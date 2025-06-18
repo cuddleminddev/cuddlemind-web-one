@@ -4,11 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { SocketService } from './service/socket.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
 import Swal from 'sweetalert2';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-chat',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbTooltipModule],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
