@@ -17,7 +17,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   public showRequestsOnMobile = false;
   screenIsWide = window.innerWidth > 991;
 
-  chatRequests: { sessionId: string; userId: string, patientName?: string, timeStamp?: string }[] = [];
+  chatRequests: { sessionId: string; userId: string, patientName?: string, timestamp?: string }[] = [];
   activeRequest = '';
   selectedUser: { name: string; status: string; id: string } = { name: '', status: '', id: '' };
   unseenChatRequestCount = 0;
@@ -112,8 +112,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     }
 
     if (this.role === 'consultant') {
-      this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName }) => {
-        this.chatRequests.push({ sessionId, userId: patientId, patientName });
+      this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName, timestamp }) => {        
+        this.chatRequests.push({ sessionId, userId: patientId, patientName, timestamp });        
         this.unseenChatRequestCount++;
       });
 
