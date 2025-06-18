@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environment/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class SocketService {
   private socket!: Socket;
+  private BaseUrl = `${environment.apiUrl}/users/doctors`
 
-  constructor() { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   connect(userId: string, role: 'consultant' | 'patient') {
     this.socket = io('https://api.cuddlemind.com/', {
@@ -82,4 +87,25 @@ export class SocketService {
       this.socket.on('chat_already_taken', data => observer.next(data));
     });
   }
+
+  sendDoctorCard(payload: {
+    sessionId: string;
+    patientId: string;
+    doctorId: any;
+  }) {
+    this.socket.emit('send_doctor_card', payload)
+  }
+
+  onDoctorCardReceived(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('receive_doctor_card', data => {
+        observer.next(data)
+      });
+    });
+  }
+
+  getDoctorList() {
+    return this.http.get(`${this.BaseUrl}`)
+  }
+
 }

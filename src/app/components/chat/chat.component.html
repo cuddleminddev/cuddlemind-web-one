@@ -40,6 +40,12 @@
         <div #messagesEnd class="chat-messages">
             <div *ngFor="let msg of messages" class="message" [ngClass]="msg.type">
                 {{ msg.text }}
+                <div *ngIf="msg.type === 'doctor-card'" class="message doctor-card">
+                    <div class="doctor-card-box">
+                        <h6><i class="bi bi-person-badge"></i></h6>
+                        <h6 *ngIf="msg.card.name">{{ msg.card.name }}</h6>
+                    </div>
+                </div>
             </div>
             <div *ngIf="selectedUser.name && messages.length === 0" class="no-messages-message">
                 Start a conversation!
@@ -56,6 +62,10 @@
             </button>
             <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (keydown.enter)="sendMessage()"
                 [disabled]="!sessionId" />
+            <button *ngIf="role === 'consultant'" class="plus-btn" (click)="openDoctorListModal(doctorListModal)"
+                type="button">
+                <i class="bi bi-plus-circle"></i>
+            </button>
             <button class="send-btn" (click)="sendMessage()" [disabled]="!sessionId">
                 <i class="bi bi-caret-right-fill send-icon"></i>
             </button>
@@ -80,6 +90,26 @@
         </ul>
         <div *ngIf="role === 'patient'" class="request-chat-button-wrapper my-3">
             <button (click)="requestChat()" class="btn btn-primary">Request Chat</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #doctorListModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Available Doctors</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body p-0">
+        <div class="doctor-card-grid">
+            <div *ngFor="let doc of doctorList" class="doctor-card" (click)="sendDoctorCard(doc); modal.close()">
+                <h6>{{ doc.name }}</h6>
+                <p><strong>Email:</strong> {{ doc.email }}</p>
+                <p><strong>Phone:</strong> {{ doc.phone || 'N/A' }}</p>
+            </div>
+        </div>
+
+        <div *ngIf="doctorList.length === 0 && role !== 'patient'" class="no-requests-message">
+            No active doctors.
         </div>
     </div>
 </ng-template>

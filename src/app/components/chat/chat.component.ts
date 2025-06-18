@@ -16,12 +16,12 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   @ViewChild('messagesEnd') private messagesEndRef!: ElementRef;
   public showRequestsOnMobile = false;
   screenIsWide = window.innerWidth > 991;
-  @HostListener('window:resize')
 
-  chatRequests: { sessionId: string; userId: string, patientName?: string }[] = [];
+  chatRequests: { sessionId: string; userId: string, patientName?: string, timeStamp?: string }[] = [];
   activeRequest = '';
-  selectedUser: { name: string; status: string } = { name: '', status: '' };
+  selectedUser: { name: string; status: string; id: string } = { name: '', status: '', id: '' };
   unseenChatRequestCount = 0;
+  doctorList: any[] = [];
 
   sessionId = '';
   messages: any[] = [];
@@ -71,7 +71,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       if (this.role === 'patient') {
         this.selectedUser = {
           name: data.consultantName || 'Consultant',
-          status: 'Online'
+          status: 'Online',
+          id: data.id
         };
       }
     });
@@ -86,8 +87,16 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
       this.messages.push({ type: 'system', text: 'Chat has ended.' });
       this.sessionId = '';
-      this.selectedUser = { name: '', status: '' };
+      this.selectedUser = { name: '', status: '', id: '' };
       this.activeRequest = '';
+    });
+
+    this.socketService.onDoctorCardReceived().subscribe(data => {
+      this.messages.push({
+        type: 'doctor-card',
+        card: data.doctor
+      });
+      this.scrollToBottom();
     });
 
     if (this.role === 'patient') {
@@ -119,16 +128,23 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         this.chatRequests = this.chatRequests.filter(req => req.sessionId !== sessionId);
         if (this.sessionId === sessionId) {
           this.activeRequest = '';
-          this.selectedUser = { name: '', status: '' };
+          this.selectedUser = { name: '', status: '', id: '' };
           this.sessionId = '';
           this.messages = [];
           this.newMessage = '';
           // this.showChat = false;
         }
       });
+
+      this.socketService.getDoctorList().subscribe((res: any) => {
+        if (res.status && res.data) {
+          this.doctorList = res.data;
+        }
+      });
     }
   }
 
+  @HostListener('window:resize')
   onResize() {
     this.screenIsWide = window.innerWidth > 991;
     if (this.screenIsWide) {
@@ -137,6 +153,9 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
 
   openChatRequests(content: any) {
+    const buttonElement = document.activeElement as HTMLElement
+    buttonElement.blur();
+
     this.unseenChatRequestCount = 0;
     this.modalService.open(content, {
       centered: true,
@@ -173,7 +192,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   selectRequest(request: any) {
     this.activeRequest = request.userId;
-    this.selectedUser = { name: request.patientName, status: 'Online' };
+    this.selectedUser = { name: request.patientName, status: 'Online', id: request.userId };
     this.sessionId = request.sessionId;
     this.messages = [];
 
@@ -206,7 +225,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
             this.chatRequests = this.chatRequests.filter(req => req.sessionId !== this.sessionId);
           }
           this.sessionId = '';
-          this.selectedUser = { name: '', status: '' };
+          this.selectedUser = { name: '', status: '', id: '' };
           this.activeRequest = '';
         }
       });
@@ -215,6 +234,40 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   toggleRequests() {
     this.showRequestsOnMobile = !this.showRequestsOnMobile;
+  }
+
+  openDoctorListModal(content: any) {
+    const buttonElement = document.activeElement as HTMLElement
+    buttonElement.blur();
+
+    this.modalService.open(content, {
+      centered: true,
+      scrollable: true,
+      size: 'lg',
+      backdrop: true,
+      animation: true
+    });
+  }
+
+  sendDoctorCard(doct: any) {
+    if (!this.sessionId || !this.userId) return;
+
+    const doctorCard = this.doctorList.find(doc => doc.id === doct.id);
+    if (!doctorCard) return;
+
+    const payload = {
+      sessionId: this.sessionId,
+      patientId: this.selectedUser.id,
+      doctorId: doctorCard.id
+    };
+
+    this.socketService.sendDoctorCard(payload);
+
+    this.messages.push({
+      type: 'doctor-card',
+      card: doctorCard
+    });
+    this.scrollToBottom();
   }
 
 }
