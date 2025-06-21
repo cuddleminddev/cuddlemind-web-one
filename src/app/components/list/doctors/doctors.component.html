@@ -40,6 +40,10 @@
                                 (click)="openModal(content, user)">
                                 <i class="bi bi-pencil"></i>
                             </button>
+                            <button class="btn btn-sm btn-outline-info rounded-circle me-1" title="Edit"
+                                (click)="openScheduleModal(scheduleContent, user)">
+                                <i class="bi bi-calendar2-plus"></i>
+                            </button>
                             <button class="btn btn-sm btn-outline-danger rounded-circle" title="Delete"
                                 (click)="deleteUser(user.id)">
                                 <i class="bi bi-trash"></i>
@@ -54,8 +58,8 @@
                 </tbody>
             </table>
             <pagination class="d-flex justify-content-center mt-3" [totalItems]="filteredUsers.length"
-                [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" (pageChanged)="onPageChanged($event.page)" previousText="‹" nextText="›"
-                [boundaryLinks]="true">
+                [itemsPerPage]="itemsPerPage" [(ngModel)]="currentPage" (pageChanged)="onPageChanged($event.page)"
+                previousText="‹" nextText="›" [boundaryLinks]="true">
             </pagination>
         </div>
     </div>
@@ -87,7 +91,7 @@
                 </div>
 
                 <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
-                <input type="text" id="role" class="form-control mb-2" formControlName="role"/>
+                <input type="text" id="role" class="form-control mb-2" formControlName="role" />
                 <div *ngIf="userForm.get('role')?.touched && userForm.get('role')?.invalid" class="text-danger small">
                     <div *ngIf="userForm.get('role')?.errors?.['required']">Role is required.</div>
                 </div>
@@ -108,5 +112,72 @@
         <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="onSave(modal)"
             [disabled]="userForm.invalid">Save</button>
+    </div>
+</ng-template>
+
+<ng-template #scheduleContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">
+            <i class="fas fa-user me-2"></i>Weekly Schedule
+        </h4>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="scheduleForm">
+            <div class="mb-3">
+                <label>Timezone</label>
+                <input type="text" class="form-control" formControlName="timezone" readonly />
+            </div>
+
+            <div formArrayName="weeklySchedule">
+                <div *ngFor="let day of weeklySchedule.controls; let i = index" [formGroupName]="i"
+                    class="mb-4 border p-2 rounded">
+                    <h6>{{ weekDays[i].day }}</h6>
+
+                    <div formArrayName="timeRanges">
+                        <div *ngFor="let range of getTimeRanges(i).controls; let j = index" [formGroupName]="j"
+                            class="row g-2 align-items-end mb-2">
+                            <div class="col">
+                                <label class="form-label small">From</label>
+                                <select class="form-select" formControlName="startTime">
+                                    <option value="" disabled>Select</option>
+                                    <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label small">To</label>
+                                <select class="form-select" formControlName="endTime">
+                                    <option value="" disabled>Select</option>
+                                    <option *ngFor="let time of timeOptions" [value]="time">{{ time }}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                    (click)="removeTimeRange(i, j)">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="col-12 text-danger small mt-1"
+                                *ngIf="range.errors && (range.dirty || range.touched)">
+                                <div *ngIf="range.errors['incompleteRange']">Both start and end times are required.
+                                </div>
+                                <div *ngIf="range.errors['invalidRange']">End time must be after start time.</div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="addTimeRange(i)">
+                            <i class="bi bi-plus"></i> Add Time Range
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="saveSchedule(modal)"
+            [disabled]="scheduleForm.invalid">Save</button>
     </div>
 </ng-template>

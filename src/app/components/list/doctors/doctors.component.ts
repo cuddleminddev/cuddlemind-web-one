@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../../../shared/components/alert/service/alert.service';
 import { ListService } from '../service/list.service';
@@ -18,17 +18,32 @@ export class DoctorsComponent implements OnInit, OnDestroy {
   @Output() onDestroy = new EventEmitter<void>();
 
   userForm!: FormGroup;
+  scheduleForm!: FormGroup;
+
   allUsers!: any;
   filterText!: string;
   loading: boolean = true;
   allroles!: any
 
   editingUserId: string | null = null;
+  selectedDoctorId: string | null = null;
 
   currentPage = 1;
   itemsPerPage = 10;
   currentApiPage: number = 1;
   fetchedPages = new Set<number>();
+
+  timeOptions: string[] = [];
+
+  weekDays = [
+    { day: 'Sunday', id: 0 },
+    { day: 'Monday', id: 1 },
+    { day: 'Tuesday', id: 2 },
+    { day: 'Wednesday', id: 3 },
+    { day: 'Thursday', id: 4 },
+    { day: 'Friday', id: 5 },
+    { day: 'Saturday', id: 6 }
+  ];
 
   constructor(
     private service: ListService,
@@ -46,7 +61,9 @@ export class DoctorsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onInit.emit();
-    this.loadDoctors()
+    this.loadDoctors();
+    this.generateTimeOptions();
+    this.initializeScheduleForm();
   }
 
   ngOnDestroy(): void {
@@ -219,9 +236,110 @@ export class DoctorsComponent implements OnInit, OnDestroy {
       : this.allUsers;
   }
 
+  openScheduleModal(content: any, user?: any) {
+    const buttonElement = document.activeElement as HTMLElement;
+    buttonElement.blur();
+
+    this.initializeScheduleForm();
+    this.selectedDoctorId = user.id;
+
+    this.modalService.open(content, { scrollable: true });
+  }
+
+  initializeScheduleForm() {
+    const days = this.weekDays.map(day => this.fb.group({
+      dayOfWeek: day.id,
+      timeRanges: this.fb.array([])
+    }));
+
+    this.scheduleForm = this.fb.group({
+      timezone: [{ value: 'Asia/Kolkata', disabled: true }, Validators.required],
+      weeklySchedule: this.fb.array(days)
+    });
+  }
+
+  get weeklySchedule(): FormArray {
+    return this.scheduleForm.get('weeklySchedule') as FormArray;
+  }
+
+  getTimeRanges(dayIndex: number): FormArray {
+    return this.weeklySchedule.at(dayIndex).get('timeRanges') as FormArray;
+  }
+
+  addTimeRange(dayIndex: number) {
+    const timeRangeGroup = this.fb.group({
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required]
+    }, { validators: this.validateTimeRange });
+
+    this.getTimeRanges(dayIndex).push(timeRangeGroup);
+  }
+
+  removeTimeRange(dayIndex: number, rangeIndex: number) {
+    this.getTimeRanges(dayIndex).removeAt(rangeIndex);
+  }
+
+  validateTimeRange(group: FormGroup) {
+    const start = group.get('startTime')?.value;
+    const end = group.get('endTime')?.value;
+
+    if (!start && !end) return null;
+
+    if (!start || !end) return { incompleteRange: true };
+
+    if (start >= end) return { invalidRange: true };
+
+    return null;
+  }
+
+
+  saveSchedule(modal: any) {
+    this.scheduleForm.markAllAsTouched();
+    if (!this.scheduleForm.valid || !this.selectedDoctorId) return;
+
+    const payload = {
+      doctorId: this.selectedDoctorId,
+      timezone: this.scheduleForm.getRawValue().timezone,
+      weeklySchedule: this.scheduleForm.getRawValue().weeklySchedule
+    };
+
+    this.service.setDoctorWeeklySchedule(payload).subscribe({
+      next: (res) => {
+        this.alertService.showAlert({
+          message: 'Schedule successfully set.',
+          type: 'success',
+          autoDismiss: true,
+          duration: 4000
+        });
+      },
+      error: (err) => {
+        this.alertService.showAlert({
+          message: err.message,
+          type: 'error',
+          autoDismiss: true,
+          duration: 4000
+        });
+      }
+    })
+    modal.close();
+  }
+
+  generateTimeOptions() {
+    const times: string[] = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let min = 0; min < 60; min += 30) {
+        const hh = hour.toString().padStart(2, '0');
+        const mm = min.toString().padStart(2, '0');
+        times.push(`${hh}:${mm}`);
+      }
+    }
+    this.timeOptions = times;
+  }
+
   close() {
-    this.userForm.reset()
+    this.userForm.reset();
+    this.scheduleForm?.reset();
     this.editingUserId = null;
-    this.modalService.dismissAll()
+    this.modalService.dismissAll();
   }
 }

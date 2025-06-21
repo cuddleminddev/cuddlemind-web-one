@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ListService {
   private baseUrl: string = `${environment.apiUrl}/users`
+  private baseUrl1: string = `${environment.apiUrl}`
 
   constructor(
     private http: HttpClient
@@ -44,5 +45,11 @@ export class ListService {
   updateCurrentUser(itm: any) {
     return this.http.patch(`${this.baseUrl}/profile`, itm)
   }
+
+  setDoctorWeeklySchedule(itm: any){
+    return this.http.post(`${this.baseUrl1}/timeslots/schedule`, itm)
+  }
+
+  getDoctorWeeklySchedule(){}
 
 }
