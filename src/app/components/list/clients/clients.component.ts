@@ -53,11 +53,14 @@ export class ClientsComponent {
     this.onDestroy.emit();
   }
 
-  loadclients() {
+  loadclients(bool?: boolean) {
     this.loading = true;
     this.service.getUserTypes(1, 100, 'client').subscribe({
       next: (res) => {
         const newUsers = res.data.users || [];
+        if (bool === true) {
+          this.allUsers = []
+        }
         this.allUsers = [...(this.allUsers || []), ...newUsers];
         this.fetchedPages.add(this.currentApiPage);
         this.loading = false;
@@ -130,7 +133,7 @@ export class ClientsComponent {
               autoDismiss: true,
               duration: 4000
             });
-            this.loadclients();
+            this.loadclients(true);
             this.userForm.reset();
             modal.close('Save click');
             this.editingUserId = null;
@@ -153,7 +156,7 @@ export class ClientsComponent {
               autoDismiss: true,
               duration: 4000
             });
-            this.loadclients();
+            this.loadclients(true);
             this.userForm.reset();
             modal.close('Save click');
           },
@@ -186,7 +189,7 @@ export class ClientsComponent {
       if (result.isConfirmed) {
         this.service.deleteUser(id).subscribe({
           next: (res) => {
-            this.loadclients();
+            this.loadclients(true);
             Swal.fire({
               title: "Deleted!",
               text: "Client has been deleted.",

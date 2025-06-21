@@ -70,11 +70,14 @@ export class DoctorsComponent implements OnInit, OnDestroy {
     this.onDestroy.emit();
   }
 
-  loadDoctors() {
+  loadDoctors(bool?: boolean) {
     this.loading = true;
     this.service.getUserTypes(1, 100, 'doctor').subscribe({
       next: (res) => {
         const newUsers = res.data.users || [];
+        if (bool === true) {
+          this.allUsers = []
+        }
         this.allUsers = [...(this.allUsers || []), ...newUsers];
         this.fetchedPages.add(this.currentApiPage);
         this.loading = false;
@@ -147,7 +150,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
               autoDismiss: true,
               duration: 4000
             });
-            this.loadDoctors();
+            this.loadDoctors(true);
             this.userForm.reset();
             modal.close('Save click');
             this.editingUserId = null;
@@ -170,7 +173,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
               autoDismiss: true,
               duration: 4000
             });
-            this.loadDoctors();
+            this.loadDoctors(true);
             this.userForm.reset();
             modal.close('Save click');
           },
@@ -203,7 +206,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.service.deleteUser(id).subscribe({
           next: (res) => {
-            this.loadDoctors();
+            this.loadDoctors(true);
             Swal.fire({
               title: "Deleted!",
               text: "Doctor has been deleted.",

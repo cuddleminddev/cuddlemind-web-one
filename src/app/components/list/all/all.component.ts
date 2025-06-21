@@ -69,11 +69,14 @@ export class AllComponent implements OnInit, OnDestroy {
     this.onDestroy.emit();
   }
 
-  loadAllUsers() {
+  loadAllUsers(bool?: boolean) {
     this.loading = true;
     this.service.getAllUsers(this.currentApiPage, 100, 'role').subscribe({
       next: (res) => {
         const newUsers = res.data.users || [];
+        if (bool === true) {
+          this.allUsers = []
+        }
         this.allUsers = [...(this.allUsers || []), ...newUsers];
         this.fetchedPages.add(this.currentApiPage);
         this.loading = false;
@@ -163,7 +166,7 @@ export class AllComponent implements OnInit, OnDestroy {
               autoDismiss: true,
               duration: 4000
             });
-            this.loadAllUsers();
+            this.loadAllUsers(true);
             this.userForm.reset();
             modal.close('Save click');
             this.editingUserId = null;
@@ -186,7 +189,7 @@ export class AllComponent implements OnInit, OnDestroy {
               autoDismiss: true,
               duration: 4000
             });
-            this.loadAllUsers();
+            this.loadAllUsers(true);
             this.userForm.reset();
             modal.close('Save click');
           },
@@ -219,7 +222,7 @@ export class AllComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.service.deleteUser(id).subscribe({
           next: (res) => {
-            this.loadAllUsers();
+            this.loadAllUsers(true);
             Swal.fire({
               title: "Deleted!",
               text: "User has been deleted.",
