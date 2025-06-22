@@ -96,6 +96,16 @@ export class SocketService {
     this.socket.emit('send_doctor_card', payload)
   }
 
+  sendDoctorCardInstantbooking(payload: {
+    sessionId: string;
+    patientId: string;
+    doctorId: any;
+  }) {
+    console.log(payload);
+    
+    this.socket.emit('send_doctor_info', payload)
+  }
+
   onDoctorCardReceived(): Observable<any> {
     return new Observable(observer => {
       this.socket.on('receive_doctor_card', data => {

@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { SocketService } from './service/socket.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
 import Swal from 'sweetalert2';
-import { NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbNavModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { ListService } from '../list/service/list.service';
+import { FilterPipe } from '../../shared/pipes/filter.pipe';
 
 @Component({
   selector: 'app-chat',
-  imports: [CommonModule, FormsModule, NgbTooltipModule],
+  imports: [CommonModule, FormsModule, NgbTooltipModule, NgbNavModule, FilterPipe],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
@@ -22,6 +24,9 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   selectedUser: { name: string; status: string; id: string } = { name: '', status: '', id: '' };
   unseenChatRequestCount = 0;
   doctorList: any[] = [];
+  allDoctorList: any[] = [];
+  filterText!: string;
+
 
   sessionId = '';
   messages: any[] = [];
@@ -33,7 +38,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   constructor(
     private socketService: SocketService,
     private alertService: AlertService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private doctorService: ListService
   ) { }
 
   ngOnInit(): void {
@@ -112,8 +118,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     }
 
     if (this.role === 'consultant') {
-      this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName, timestamp }) => {        
-        this.chatRequests.push({ sessionId, userId: patientId, patientName, timestamp });        
+      this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName, timestamp }) => {
+        this.chatRequests.push({ sessionId, userId: patientId, patientName, timestamp });
         this.unseenChatRequestCount++;
       });
 
@@ -141,6 +147,12 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           this.doctorList = res.data;
         }
       });
+
+      this.doctorService.getUserTypes(1, 100, 'doctor').subscribe((res: any) => {
+        if (res.status && res.data.users) {
+          this.allDoctorList = res.data.users;
+        }
+      })
     }
   }
 
@@ -268,6 +280,28 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       card: doctorCard
     });
     this.scrollToBottom();
+  }
+
+  sendDoctorCardInstantBook(doct: any) {
+    if (!this.sessionId || !this.userId) return;
+
+    const doctorCard = this.allDoctorList.find(doc => doc.id === doct.id);
+    if (!doctorCard) return;
+
+    const payload = {
+      sessionId: this.sessionId,
+      patientId: this.selectedUser.id,
+      doctorId: doctorCard.id
+    };
+
+    this.socketService.sendDoctorCardInstantbooking(payload)
+
+    this.alertService.showAlert({
+      message: 'Doctor card send for instant booking.',
+      type: 'success',
+      autoDismiss: true,
+      duration: 4000
+    });
   }
 
 }
