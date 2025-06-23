@@ -101,7 +101,7 @@ export class SocketService {
     patientId: string;
     doctorId: any;
   }) {
-    console.log(payload);
+    console.log('send_doctor_info',payload);
     
     this.socket.emit('send_doctor_info', payload)
   }
