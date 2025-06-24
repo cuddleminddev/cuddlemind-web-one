@@ -45,6 +45,9 @@ export class DoctorsComponent implements OnInit, OnDestroy {
     { day: 'Saturday', id: 6 }
   ];
 
+  timezones: string[] = Intl?.supportedValuesOf?.('timeZone')
+  scheduleLoading: boolean = false;
+
   constructor(
     private service: ListService,
     private modalService: NgbModal,
@@ -61,6 +64,8 @@ export class DoctorsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onInit.emit();
+    console.log(this.timezones);
+
     this.loadDoctors();
     this.generateTimeOptions();
     this.initializeScheduleForm();
@@ -246,17 +251,19 @@ export class DoctorsComponent implements OnInit, OnDestroy {
     this.initializeScheduleForm();
     this.selectedDoctorId = user.id;
 
+    this.getWeeklySchedule(user.id)
+
     this.modalService.open(content, { scrollable: true });
   }
 
-  initializeScheduleForm() {
+  initializeScheduleForm(time?: any) {
     const days = this.weekDays.map(day => this.fb.group({
       dayOfWeek: day.id,
       timeRanges: this.fb.array([])
     }));
 
     this.scheduleForm = this.fb.group({
-      timezone: [{ value: 'Asia/Kolkata', disabled: true }, Validators.required],
+      timezone: [time, Validators.required],
       weeklySchedule: this.fb.array(days)
     });
   }
@@ -345,4 +352,45 @@ export class DoctorsComponent implements OnInit, OnDestroy {
     this.editingUserId = null;
     this.modalService.dismissAll();
   }
+
+  getWeeklySchedule(id: string) {
+     this.scheduleLoading = true;
+
+    this.service.getDoctorWeeklySchedule(id).subscribe({
+      next: (res: any) => {
+        const schedule = res.weeklySchedule || [];
+        const time = res.timezone || ''
+
+        // Reset form before applying data
+        this.initializeScheduleForm(time);
+
+        schedule.forEach((dayData: any) => {
+          const dayIndex = this.weekDays.findIndex(d => d.id === dayData.dayOfWeek);
+          if (dayIndex !== -1) {
+            const timeRangesArray = this.getTimeRanges(dayIndex);
+            dayData.timeRanges.forEach((range: any) => {
+              const timeRangeGroup = this.fb.group({
+                startTime: [range.startTime, Validators.required],
+                endTime: [range.endTime, Validators.required]
+              }, { validators: this.validateTimeRange });
+
+              timeRangesArray.push(timeRangeGroup);
+            });
+          }
+        });
+        this.scheduleLoading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.scheduleLoading = false;
+        this.alertService.showAlert({
+          message: 'Weekly schedule is not loaded.',
+          type: 'error',
+          autoDismiss: true,
+          duration: 4000
+        });
+      }
+    });
+  }
+
 }

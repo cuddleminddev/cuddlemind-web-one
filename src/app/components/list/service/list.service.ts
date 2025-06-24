@@ -46,10 +46,12 @@ export class ListService {
     return this.http.patch(`${this.baseUrl}/profile`, itm)
   }
 
-  setDoctorWeeklySchedule(itm: any){
+  setDoctorWeeklySchedule(itm: any) {
     return this.http.post(`${this.baseUrl1}/timeslots/schedule`, itm)
   }
 
-  getDoctorWeeklySchedule(){}
+  getDoctorWeeklySchedule(id: string) {
+    return this.http.get(`${this.baseUrl1}/timeslots/weekly?doctorId=${id}`)
+  }
 
 }

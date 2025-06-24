@@ -122,13 +122,23 @@
         </h4>
     </div>
     <div class="modal-body">
-        <form [formGroup]="scheduleForm">
+        <div *ngIf="scheduleLoading" class="text-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div class="mt-2">Loading schedule...</div>
+        </div>
+
+        <form *ngIf="!scheduleLoading" [formGroup]="scheduleForm">
             <div class="mb-3">
                 <label>Timezone</label>
-                <input type="text" class="form-control" formControlName="timezone" readonly />
+                <select class="form-select" formControlName="timezone">
+                    <option value="" disabled>Select timezone</option>
+                    <option *ngFor="let zone of timezones" [value]="zone">{{ zone }}</option>
+                </select>
             </div>
 
-            <div formArrayName="weeklySchedule">
+            <div *ngIf="scheduleForm.get('timezone')?.value" formArrayName="weeklySchedule">
                 <div *ngFor="let day of weeklySchedule.controls; let i = index" [formGroupName]="i"
                     class="mb-4 border p-2 rounded">
                     <h6>{{ weekDays[i].day }}</h6>
@@ -177,7 +187,6 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="saveSchedule(modal)"
-            [disabled]="scheduleForm.invalid">Save</button>
+        <button type="button" class="btn btn-primary" (click)="saveSchedule(modal)">Save</button>
     </div>
 </ng-template>
