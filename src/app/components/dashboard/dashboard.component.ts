@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { DashboardService } from './service/dashboard.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
@@ -15,9 +15,9 @@ Chart.register(...registerables);
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('doughnutCanvas') private doughnutCanvas!: ElementRef;
-  @ViewChild('lineCanvas') private barCanvas!: ElementRef;
+  @ViewChild('lineCanvas') private lineCanvas!: ElementRef;
 
   doughNutChart!: Chart;
   lineChart!: Chart;
@@ -43,13 +43,17 @@ export class DashboardComponent implements OnInit {
     this.startDate = lastMonth;
     this.endDate = today;
 
-    this.onDateChange();
+    // this.onDateChange();
   }
 
   // ngAfterViewInit(): void {
   //   this.loadPieChart();
   //   this.loadLineChart();
   // }
+
+  ngAfterViewInit(): void {
+    this.onDateChange();
+  }
 
   onDateChange() {
     this.loadDashboardStats();
@@ -136,7 +140,7 @@ export class DashboardComponent implements OnInit {
         const total = datasets.reduce((sum: number, ds: any) => sum + ds.data.reduce((a: number, b: number) => a + b, 0), 0);
         this.lineChartNoData = total === 0;
 
-        if (!this.lineChartNoData && this.barCanvas) {
+        if (!this.lineChartNoData && this.lineCanvas) {
           const processedDatasets = datasets.map((dataset: any, index: number) => ({
             label: dataset.label,
             data: dataset.data,
@@ -147,7 +151,7 @@ export class DashboardComponent implements OnInit {
           }));
 
           this.lineChart = this.createLineChart(
-            this.barCanvas.nativeElement,
+            this.lineCanvas.nativeElement,
             labels,
             processedDatasets
           );
@@ -204,13 +208,13 @@ export class DashboardComponent implements OnInit {
       type: 'line',
       data: {
         labels,
-        datasets
+        datasets,
       },
       options: {
         responsive: true,
         plugins: {
           legend: { display: true }
-        }
+        },
       }
     });
   }
