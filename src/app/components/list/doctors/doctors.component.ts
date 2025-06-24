@@ -45,7 +45,24 @@ export class DoctorsComponent implements OnInit, OnDestroy {
     { day: 'Saturday', id: 6 }
   ];
 
-  timezones: string[] = Intl?.supportedValuesOf?.('timeZone')
+  // timezones: string[] = Intl?.supportedValuesOf?.('timeZone')
+  timezones: string[] = [
+  'UTC',
+  'America/New_York',
+  'America/Chicago',
+  'America/Denver',
+  'America/Los_Angeles',
+  'Europe/London',
+  'Europe/Paris',
+  'Europe/Berlin',
+  'Asia/Kolkata',
+  'Asia/Tokyo',
+  'Asia/Singapore',
+  'Asia/Dubai',
+  'Australia/Sydney',
+  'Africa/Johannesburg'
+];
+
   scheduleLoading: boolean = false;
 
   constructor(
@@ -64,7 +81,6 @@ export class DoctorsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.onInit.emit();
-    console.log(this.timezones);
 
     this.loadDoctors();
     this.generateTimeOptions();
@@ -381,7 +397,6 @@ export class DoctorsComponent implements OnInit, OnDestroy {
         this.scheduleLoading = false;
       },
       error: (err) => {
-        console.error(err);
         this.scheduleLoading = false;
         this.alertService.showAlert({
           message: 'Weekly schedule is not loaded.',
