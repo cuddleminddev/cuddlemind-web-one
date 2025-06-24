@@ -1,19 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { DashboardService } from './service/dashboard.service';
 import { AlertService } from '../../shared/components/alert/service/alert.service';
+import { NgbCalendar, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 Chart.register(...registerables);
 
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, NgbDatepickerModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class DashboardComponent implements OnInit {
   @ViewChild('doughnutCanvas') private doughnutCanvas!: ElementRef;
   @ViewChild('lineCanvas') private barCanvas!: ElementRef;
 
@@ -23,19 +25,48 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   loading: boolean = true;
   pieChartLoading: boolean = true;
   lineChartLoading: boolean = true;
+  pieChartNoData = false;
+  lineChartNoData = false;
+
+  startDate!: NgbDateStruct;
+  endDate!: NgbDateStruct;
 
   constructor(
     private service: DashboardService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private calendar: NgbCalendar
   ) { }
 
   ngOnInit(): void {
-    this.loadDashboardStats();
+    const today = this.calendar.getToday();
+    const lastMonth = this.calendar.getPrev(today, 'm', 1);
+    this.startDate = lastMonth;
+    this.endDate = today;
+
+    this.onDateChange();
   }
 
-  ngAfterViewInit(): void {
+  // ngAfterViewInit(): void {
+  //   this.loadPieChart();
+  //   this.loadLineChart();
+  // }
+
+  onDateChange() {
+    this.loadDashboardStats();
     this.loadPieChart();
     this.loadLineChart();
+  }
+
+  private formatDate(date: NgbDateStruct): string {
+    const { year, month, day } = date;
+    return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+  }
+
+  private getDateRange() {
+    return {
+      startDate: this.formatDate(this.startDate),
+      endDate: this.formatDate(this.endDate)
+    };
   }
 
   private loadDashboardStats() {
@@ -67,9 +98,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.service.getPieChart({ startDate, endDate }).subscribe({
       next: (res: any) => {
         const { labels, values } = res.data;
-        const colors = ['#FF6384', '#36A2EB', '#FFCE56'];
+        const total = values.reduce((a: number, b: number) => a + b, 0);
+        this.pieChartNoData = total === 0;
 
-        if (this.doughnutCanvas) {
+        if (!this.pieChartNoData && this.doughnutCanvas) {
+          const colors = ['#FF6384', '#36A2EB', '#FFCE56'];
           this.doughNutChart = this.createDoughnutChart(
             this.doughnutCanvas.nativeElement,
             labels,
@@ -82,6 +115,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       },
       error: () => {
         this.pieChartLoading = false;
+        this.pieChartNoData = true;
         this.alertService.showAlert({
           message: 'Failed to load pie chart data.',
           type: 'error',
@@ -99,17 +133,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     this.service.getLineChart({ startDate, endDate }).subscribe({
       next: (res: any) => {
         const { labels, datasets } = res.data;
+        const total = datasets.reduce((sum: number, ds: any) => sum + ds.data.reduce((a: number, b: number) => a + b, 0), 0);
+        this.lineChartNoData = total === 0;
 
-        const processedDatasets = datasets.map((dataset: any, index: number) => ({
-          label: dataset.label,
-          data: dataset.data,
-          backgroundColor: this.getLineColor(index),
-          borderColor: this.getLineColor(index),
-          fill: false,
-          tension: 0.3
-        }));
+        if (!this.lineChartNoData && this.barCanvas) {
+          const processedDatasets = datasets.map((dataset: any, index: number) => ({
+            label: dataset.label,
+            data: dataset.data,
+            backgroundColor: this.getLineColor(index),
+            borderColor: this.getLineColor(index),
+            fill: false,
+            tension: 0.3
+          }));
 
-        if (this.barCanvas) {
           this.lineChart = this.createLineChart(
             this.barCanvas.nativeElement,
             labels,
@@ -121,6 +157,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       },
       error: () => {
         this.lineChartLoading = false;
+        this.lineChartNoData = true;
         this.alertService.showAlert({
           message: 'Failed to load line chart data.',
           type: 'error',
@@ -131,17 +168,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private getDateRange() {
-    const today = new Date();
-    const lastMonth = new Date();
-    lastMonth.setMonth(today.getMonth() - 1);
-    return {
-      startDate: lastMonth.toISOString().split('T')[0],
-      endDate: today.toISOString().split('T')[0]
-    };
-  }
 
   private createDoughnutChart(ctx: HTMLCanvasElement, labels: string[], data: number[], colors: string[]): Chart<'doughnut'> {
+    if (this.doughNutChart) {
+      this.doughNutChart.destroy();
+    }
+
     return new Chart(ctx, {
       type: 'doughnut',
       data: {
@@ -164,6 +196,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   private createLineChart(ctx: HTMLCanvasElement, labels: string[], datasets: any[]): Chart<'line'> {
+    if (this.lineChart) {
+      this.lineChart.destroy();
+    }
+
     return new Chart(ctx, {
       type: 'line',
       data: {

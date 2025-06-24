@@ -18,10 +18,10 @@
             <label for="patientSelect" class="form-label">Scheduled At</label>
             <div class="d-flex gap-2 align-items-center">
                 <input class="form-control" placeholder="Start Date" name="startDate" [(ngModel)]="selectedStartDate"
-                    ngbDatepicker #startDp="ngbDatepicker" (click)="startDp.toggle()" autocomplete="off" />
+                    ngbDatepicker #startDp="ngbDatepicker" (click)="startDp.toggle()" autocomplete="off" readonly />
 
                 <input class="form-control" placeholder="End Date" name="endDate" [(ngModel)]="selectedEndDate"
-                    ngbDatepicker #endDp="ngbDatepicker" (click)="endDp.toggle()" autocomplete="off" />
+                    ngbDatepicker #endDp="ngbDatepicker" (click)="endDp.toggle()" autocomplete="off" readonly />
             </div>
         </div>
     </div>
