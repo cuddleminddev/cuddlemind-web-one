@@ -66,6 +66,11 @@
             <div class="card dashboard-card p-4 h-100">
                 <h5 class="mb-3">Distribution</h5>
                 <div class="doughnutchart">
+                    <div *ngIf="pieChartLoading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                     <canvas #doughnutCanvas></canvas>
                 </div>
             </div>
@@ -74,6 +79,11 @@
             <div class="card dashboard-card p-4 h-100">
                 <h5 class="mb-3">Bookings</h5>
                 <div class="barchart">
+                    <div *ngIf="lineChartLoading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                     <canvas #lineCanvas></canvas>
                 </div>
             </div>

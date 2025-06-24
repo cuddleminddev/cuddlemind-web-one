@@ -21,13 +21,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   lineChart!: Chart;
   datas!: any;
   loading: boolean = true;
+  pieChartLoading: boolean = true;
+  lineChartLoading: boolean = true;
 
   constructor(
     private service: DashboardService,
     private alertService: AlertService
   ) { }
-
+  
   ngOnInit(): void {
+    this.loadDashboardStats();
+  }
+
+  ngAfterViewInit(): void {
+    this.loadPieChart();
+    this.loadLineChart();
+  }
+
+  private loadDashboardStats() {
     this.loading = true;
     this.service.getClient().subscribe({
       next: (res: any) => {
@@ -42,44 +53,18 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           type: 'error',
           autoDismiss: true,
           duration: 4000
-        })
+        });
       }
-    })
-
-    this.loadChartDatas()
+    });
   }
 
-  ngAfterViewInit(): void {
-    // this.doughNutChart = this.createDoughnutChart(
-    //   this.doughnutCanvas.nativeElement,
-    //   ['Users', 'Chats', 'Bookings'],
-    //   [30, 40, 30],
-    //   ['#FF6384', '#36A2EB', '#FFCE56']
-    // );
+  private loadPieChart() {
+    this.pieChartLoading = true;
+    const { startDate, endDate } = this.getDateRange();
 
-    this.lineChart = this.createLineChart(
-      this.barCanvas.nativeElement,
-      ['January', 'February', 'March', 'April', 'May'],
-      [120, 90, 140, 110, 150],
-      ['#FF9F40', '#FF6384', '#36A2EB', '#4BC0C0', '#FFCE56']
-    );
-  }
-
-  loadChartDatas() {
-    const today = new Date();
-    const lastMonth = new Date();
-    lastMonth.setMonth(today.getMonth() - 1);
-
-    const payload = {
-      startDate: lastMonth.toISOString().split('T')[0],
-      endDate: today.toISOString().split('T')[0]
-    };
-
-    this.service.getPieChart(payload).subscribe({
+    this.service.getPieChart({ startDate, endDate }).subscribe({
       next: (res: any) => {
-        const chartData = res.data;
-        const labels = chartData.labels;
-        const values = chartData.values;
+        const { labels, values } = res.data;
         const colors = ['#FF6384', '#36A2EB', '#FFCE56'];
 
         if (this.doughnutCanvas) {
@@ -90,8 +75,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             colors
           );
         }
+
+        this.pieChartLoading = false;
       },
       error: () => {
+        this.pieChartLoading = false;
         this.alertService.showAlert({
           message: 'Failed to load pie chart data.',
           type: 'error',
@@ -100,59 +88,98 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
 
-    this.service.getLineChart(payload).subscribe({
-      next: (res) => {
-        console.log(res);
+  private loadLineChart() {
+    this.lineChartLoading = true;
+    const { startDate, endDate } = this.getDateRange();
+
+    this.service.getLineChart({ startDate, endDate }).subscribe({
+      next: (res: any) => {
+        const { labels, datasets } = res.data;
+
+        const processedDatasets = datasets.map((dataset: any, index: number) => ({
+          label: dataset.label,
+          data: dataset.data,
+          backgroundColor: this.getLineColor(index),
+          borderColor: this.getLineColor(index),
+          fill: false,
+          tension: 0.3
+        }));
+
+        if (this.barCanvas) {
+          this.lineChart = this.createLineChart(
+            this.barCanvas.nativeElement,
+            labels,
+            processedDatasets
+          );
+        }
+
+        this.lineChartLoading = false;
+      },
+      error: () => {
+        this.lineChartLoading = false;
+        this.alertService.showAlert({
+          message: 'Failed to load line chart data.',
+          type: 'error',
+          autoDismiss: true,
+          duration: 4000
+        });
       }
-    })
+    });
+  }
+
+  private getDateRange() {
+    const today = new Date();
+    const lastMonth = new Date();
+    lastMonth.setMonth(today.getMonth() - 1);
+    return {
+      startDate: lastMonth.toISOString().split('T')[0],
+      endDate: today.toISOString().split('T')[0]
+    };
   }
 
   private createDoughnutChart(ctx: HTMLCanvasElement, labels: string[], data: number[], colors: string[]): Chart<'doughnut'> {
-    const config: ChartConfiguration<'doughnut'> = {
+    return new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels,
         datasets: [
           {
             data,
-            backgroundColor: colors,
-          },
-        ],
+            backgroundColor: colors
+          }
+        ]
       },
       options: {
         responsive: true,
         cutout: '60%',
         plugins: {
-          legend: { display: true },
-        },
-      },
-    };
-    return new Chart(ctx, config);
+          legend: { display: true }
+        }
+      }
+    });
   }
 
-  private createLineChart(ctx: HTMLCanvasElement, labels: string[], data: number[], colors: string[]): Chart<'line'> {
-    const config: ChartConfiguration<'line'> = {
+  private createLineChart(ctx: HTMLCanvasElement, labels: string[], datasets: any[]): Chart<'line'> {
+    return new Chart(ctx, {
       type: 'line',
       data: {
         labels,
-        datasets: [
-          {
-            label: 'Bookings',
-            data,
-            backgroundColor: colors,
-            tension: 0.2
-          },
-        ],
+        datasets
       },
       options: {
         responsive: true,
         plugins: {
-          legend: { display: true },
-        },
-      },
-    };
-    return new Chart(ctx, config);
+          legend: { display: true }
+        }
+      }
+    });
+  }
+
+  private getLineColor(index: number): string {
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+    return colors[index % colors.length];
   }
 
 }
