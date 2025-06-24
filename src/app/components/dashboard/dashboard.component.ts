@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     private service: DashboardService,
     private alertService: AlertService
   ) { }
-  
+
   ngOnInit(): void {
     this.loadDashboardStats();
   }
@@ -40,7 +40,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   private loadDashboardStats() {
     this.loading = true;
-    this.service.getClient().subscribe({
+    const { startDate, endDate } = this.getDateRange();
+
+    this.service.getClient({ startDate, endDate }).subscribe({
       next: (res: any) => {
         this.datas = res.data;
         this.loading = false;
