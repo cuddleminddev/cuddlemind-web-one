@@ -60,7 +60,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.alertService.showAlert({
-          message: 'Failed to fetch admins. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -120,9 +120,9 @@ export class AdminsComponent implements OnInit, OnDestroy {
             modal.close('Save click');
             this.editingUserId = null;
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to update admin. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -142,9 +142,9 @@ export class AdminsComponent implements OnInit, OnDestroy {
             this.userForm.reset();
             modal.close('Save click');
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to create admin. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -180,7 +180,7 @@ export class AdminsComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to delete admin. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000

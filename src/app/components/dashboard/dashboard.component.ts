@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         console.error(err);
         this.loading = false;
         this.alertService.showAlert({
-          message: 'Something went wrong. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -117,11 +117,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
         this.pieChartLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.pieChartLoading = false;
         this.pieChartNoData = true;
         this.alertService.showAlert({
-          message: 'Failed to load pie chart data.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -159,11 +159,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
         this.lineChartLoading = false;
       },
-      error: () => {
+      error: (err) => {
         this.lineChartLoading = false;
         this.lineChartNoData = true;
         this.alertService.showAlert({
-          message: 'Failed to load line chart data.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000

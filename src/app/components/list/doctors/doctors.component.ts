@@ -106,7 +106,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.loading = false;
         this.alertService.showAlert({
-          message: 'Failed to fetch doctors. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -176,9 +176,9 @@ export class DoctorsComponent implements OnInit, OnDestroy {
             modal.close('Save click');
             this.editingUserId = null;
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to update doctor. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -198,9 +198,9 @@ export class DoctorsComponent implements OnInit, OnDestroy {
             this.userForm.reset();
             modal.close('Save click');
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to create doctor. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -236,7 +236,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to delete doctor. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -340,7 +340,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.alertService.showAlert({
-          message: err.message,
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -399,7 +399,7 @@ export class DoctorsComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.scheduleLoading = false;
         this.alertService.showAlert({
-          message: 'Weekly schedule is not loaded.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000

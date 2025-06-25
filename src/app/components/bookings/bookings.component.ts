@@ -59,7 +59,7 @@ export class BookingsComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         this.alertService.showAlert({
-          message: 'Failed to fetch bookings. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -91,7 +91,7 @@ export class BookingsComponent implements OnInit {
           },
           error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to delete booking. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -142,7 +142,7 @@ export class BookingsComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         this.alertService.showAlert({
-          message: 'Failed to fetch filtered bookings. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000

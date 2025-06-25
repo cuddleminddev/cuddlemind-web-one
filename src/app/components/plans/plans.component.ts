@@ -55,7 +55,7 @@ export class PlansComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         this.alertService.showAlert({
-          message: 'Failed to fetch plans. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -109,9 +109,9 @@ export class PlansComponent implements OnInit {
             modal.close('Save click');
             this.editingPlanId = null;
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to update plan. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -131,9 +131,9 @@ export class PlansComponent implements OnInit {
             this.planForm.reset();
             modal.close('Save click');
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to create plan. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -169,7 +169,7 @@ export class PlansComponent implements OnInit {
           },
           error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to delete plan. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000

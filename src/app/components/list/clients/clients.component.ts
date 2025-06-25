@@ -68,7 +68,7 @@ export class ClientsComponent {
       error: (err) => {
         this.loading = false;
         this.alertService.showAlert({
-          message: 'Failed to fetch client. Please try again.',
+          message: err.error.message,
           type: 'error',
           autoDismiss: true,
           duration: 4000
@@ -138,9 +138,9 @@ export class ClientsComponent {
             modal.close('Save click');
             this.editingUserId = null;
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to update client. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -160,9 +160,9 @@ export class ClientsComponent {
             this.userForm.reset();
             modal.close('Save click');
           },
-          error: () => {
+          error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to create client. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000
@@ -198,7 +198,7 @@ export class ClientsComponent {
           },
           error: (err) => {
             this.alertService.showAlert({
-              message: 'Failed to delete Client. Please try again.',
+              message: err.error.message,
               type: 'error',
               autoDismiss: true,
               duration: 4000

@@ -129,7 +129,7 @@ export class HeaderComponent implements OnInit {
         error: (err) => {
           this.alertService.showAlert({
             message: err.error.message,
-            type: 'success',
+            type: 'error',
             autoDismiss: true,
             duration: 4000
           });
