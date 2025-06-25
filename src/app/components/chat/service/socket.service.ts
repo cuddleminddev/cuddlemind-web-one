@@ -100,9 +100,7 @@ export class SocketService {
     sessionId: string;
     patientId: string;
     doctorId: any;
-  }) {
-    console.log('send_doctor_info',payload);
-    
+  }) {    
     this.socket.emit('send_doctor_info', payload)
   }
 

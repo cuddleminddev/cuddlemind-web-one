@@ -52,3 +52,23 @@
   cursor: pointer;
   font-size: 35px;
 }
+
+.popover-menu {
+  min-width: 100px;
+}
+
+.popover-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 10%;
+  background: transparent;
+  font-size: 1rem;
+  color: #212529;
+  cursor: pointer;
+}
+
+.popover-item:hover {
+  background-color: #ebe5e5;
+}

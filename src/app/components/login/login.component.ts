@@ -65,7 +65,7 @@ export class LoginComponent {
         error: (err) => {
           this.loading = false;
           this.alertService.showAlert({
-            message: 'Login failed. Please try again.',
+            message: err.error.message,
             type: 'error',
             autoDismiss: true,
             duration: 4000
