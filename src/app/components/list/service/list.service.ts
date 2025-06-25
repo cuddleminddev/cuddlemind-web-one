@@ -31,7 +31,8 @@ export class ListService {
   }
 
   updateUser(id: string, user: any) {
-    return this.http.patch(`${this.baseUrl}/${id}`, user)
+    const { role, ...userWithoutRole } = user;
+    return this.http.patch(`${this.baseUrl}/${id}`, userWithoutRole);
   }
 
   deleteUser(id: string) {
