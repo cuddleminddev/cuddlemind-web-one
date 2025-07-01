@@ -93,7 +93,9 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       }
     });
 
-    this.socketService.onChatEnded().subscribe(() => {
+    this.socketService.onChatEnded().subscribe((res) => {
+      console.log(res, 'trig');
+      
       if (this.role === 'consultant') {
         const endedChat = this.chatRequests.find(c => c.userId === this.activeRequest);
         if (endedChat) {

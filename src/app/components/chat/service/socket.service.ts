@@ -78,7 +78,9 @@ export class SocketService {
 
   onChatEnded(): Observable<void> {
     return new Observable(observer => {
-      this.socket.on('chat_ended', () => observer.next());
+      this.socket.on('chat_ended', data => {
+        observer.next(data)
+      });
     });
   }
 
