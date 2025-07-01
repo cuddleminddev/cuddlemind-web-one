@@ -374,8 +374,8 @@ export class DoctorsComponent implements OnInit, OnDestroy {
 
     this.service.getDoctorWeeklySchedule(id).subscribe({
       next: (res: any) => {
-        const schedule = res.weeklySchedule || [];
-        const time = res.timezone || ''
+        const schedule = res.data.weeklySchedule || [];
+        const time = res.data.timezone || ''
 
         // Reset form before applying data
         this.initializeScheduleForm(time);

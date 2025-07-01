@@ -51,7 +51,7 @@ export class ListService {
     return this.http.post(`${this.baseUrl1}/timeslots/schedule`, itm)
   }
 
-  getDoctorWeeklySchedule(id: string) {
+  getDoctorWeeklySchedule(id: string | null) {
     return this.http.get(`${this.baseUrl1}/timeslots/weekly?doctorId=${id}`)
   }
 
