@@ -112,6 +112,14 @@ export class SocketService {
     });
   }
 
+  onRequestAlreadyAccepted(): Observable<any> {
+    return new Observable(observer => {
+      this.socket.on('chat_taken', data => {
+        observer.next(data)
+      })
+    })
+  }
+
   getDoctorList() {
     return this.http.get(`${this.BaseUrl}`)
   }

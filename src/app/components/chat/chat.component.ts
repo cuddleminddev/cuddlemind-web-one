@@ -145,7 +145,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           unseenCount: 0,
           chatStatus: 'pending' // new request = pending
         });
-
+        // console.log(this.chatRequests);
+        
         this.updateUnseenChatRequestCount();
       });
 
@@ -165,6 +166,19 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           this.messages = [];
           this.newMessage = '';
           // this.showChat = false;
+        }
+      });
+
+      this.socketService.onRequestAlreadyAccepted().subscribe((res: any) => {
+
+        this.chatRequests = this.chatRequests.filter(req => req.sessionId !== res.sessionId);
+
+        if (this.sessionId === res.sessionId) {
+          this.activeRequest = '';
+          this.selectedUser = { name: '', status: '', id: '' };
+          this.sessionId = '';
+          this.messages = [];
+          this.newMessage = '';
         }
       });
 
