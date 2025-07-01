@@ -1,24 +1,42 @@
 <button class="floating-chat-toggle d-md-none" (click)="openChatRequests(chatRequestsModal)">
     <i class="bi bi-chat-dots-fill"></i>
-    <span *ngIf="role === 'consultant' && unseenChatRequestCount > 0"
+    <span *ngIf="role === 'consultant' && chatRequests.length > 0"
         class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
-        {{ unseenChatRequestCount }}
+        {{ chatRequests.length }}
     </span>
+
 </button>
 
 <div class="chat-container">
     <!-- Left Panel -->
     <div class="chat-requests" *ngIf="!(role === 'patient' && sessionId) && (showRequestsOnMobile || screenIsWide)">
-        <div class="request-header">Chats</div>
+        <div class="request-header">Chats
+            <span *ngIf="chatRequests.length > 0" class="badge bg-danger ms-2">
+    {{ chatRequests.length }}
+  </span>
+        </div>
         <div class="chat-requests-body">
             <ul class="request-list">
-                <li *ngFor="let user of chatRequests" class="request-item"
+                <li *ngFor="let user of chatRequests"
+                    class="request-item d-flex justify-content-between align-items-center"
                     [class.active]="user.userId === activeRequest" (click)="selectRequest(user)">
                     <div class="d-flex flex-column">
-                        <span>{{ user.patientName || user.userId }}</span>
+                        <span>
+                            {{ user.patientName || user.userId }}
+                            <span class="status-dot" [ngClass]="{
+              'pending': user.chatStatus === 'pending',
+              'accepted': user.chatStatus === 'accepted',
+              'ended': user.chatStatus === 'ended'
+            }"></span>
+                        </span>
                         <small class="text-muted">{{ user.timestamp | date: 'shortTime' }}</small>
                     </div>
+
+                    <span *ngIf="user.unseenCount > 0" class="badge bg-danger rounded-pill ms-2">
+                        {{ user.unseenCount }}
+                    </span>
                 </li>
+
                 <div *ngIf="chatRequests.length === 0 && role !== 'patient'" class="no-requests-message">
                     No active chat requests.
                 </div>
@@ -65,8 +83,8 @@
             </button>
             <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (keydown.enter)="sendMessage()"
                 [disabled]="!sessionId" />
-            <button *ngIf="role === 'consultant'" [disabled]="!sessionId" class="plus-btn" (click)="openDoctorListModal(doctorListModal)"
-                type="button" title="Doctors List">
+            <button *ngIf="role === 'consultant'" [disabled]="!sessionId" class="plus-btn"
+                (click)="openDoctorListModal(doctorListModal)" type="button" title="Doctors List">
                 <i class="bi bi-plus-circle"></i>
             </button>
             <button class="send-btn" (click)="sendMessage()" [disabled]="!sessionId" title="Send Message">
