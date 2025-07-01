@@ -12,8 +12,8 @@
     <div class="chat-requests" *ngIf="!(role === 'patient' && sessionId) && (showRequestsOnMobile || screenIsWide)">
         <div class="request-header">Chats
             <span *ngIf="chatRequests.length > 0" class="badge bg-danger ms-2">
-    {{ chatRequests.length }}
-  </span>
+                {{ chatRequests.length }}
+            </span>
         </div>
         <div class="chat-requests-body">
             <ul class="request-list">

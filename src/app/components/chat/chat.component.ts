@@ -137,6 +137,9 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     if (this.role === 'consultant') {
       this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName, timestamp }) => {
+
+        this.chatRequests = this.chatRequests.filter(req => req.userId !== patientId);
+        
         this.chatRequests.push({
           sessionId,
           userId: patientId,
@@ -144,9 +147,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           timestamp,
           unseenCount: 0,
           chatStatus: 'pending' // new request = pending
-        });
-        // console.log(this.chatRequests);
-        
+        });        
         this.updateUnseenChatRequestCount();
       });
 
