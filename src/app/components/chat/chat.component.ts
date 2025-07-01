@@ -19,14 +19,14 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   public showRequestsOnMobile = false;
   screenIsWide = window.innerWidth > 991;
 
-  chatRequests: { sessionId: string; userId: string, patientName?: string, timestamp?: string }[] = [];
+  chatRequests: any[] = [];
   activeRequest = '';
   selectedUser: { name: string; status: string; id: string } = { name: '', status: '', id: '' };
   unseenChatRequestCount = 0;
   doctorList: any[] = [];
   allDoctorList: any[] = [];
   filterText!: string;
-
+  userPresenceMap: Map<string, boolean> = new Map();
 
   sessionId = '';
   messages: any[] = [];
@@ -67,8 +67,18 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         type: msg.senderId === this.userId ? 'sent' : 'received',
         text: msg.message
       });
+
+      if (this.role === 'consultant' && msg.senderId !== this.activeRequest) {
+        const chat = this.chatRequests.find(c => c.userId === msg.senderId);
+        if (chat) {
+          chat.unseenCount = (chat.unseenCount || 0) + 1;
+          this.updateUnseenChatRequestCount();
+        }
+      }
+
       this.scrollToBottom();
     });
+
 
     this.socketService.onChatStarted().subscribe(data => {
       this.sessionId = data.sessionId;
@@ -84,6 +94,13 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     });
 
     this.socketService.onChatEnded().subscribe(() => {
+      if (this.role === 'consultant') {
+        const endedChat = this.chatRequests.find(c => c.userId === this.activeRequest);
+        if (endedChat) {
+          endedChat.chatStatus = 'ended';
+        }
+      }
+
       this.alertService.showAlert({
         message: 'Chat session has ended.',
         type: 'info',
@@ -96,6 +113,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       this.selectedUser = { name: '', status: '', id: '' };
       this.activeRequest = '';
     });
+
 
     this.socketService.onDoctorCardReceived().subscribe(data => {
       this.messages.push({
@@ -119,8 +137,16 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     if (this.role === 'consultant') {
       this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName, timestamp }) => {
-        this.chatRequests.push({ sessionId, userId: patientId, patientName, timestamp });
-        this.unseenChatRequestCount++;
+        this.chatRequests.push({
+          sessionId,
+          userId: patientId,
+          patientName,
+          timestamp,
+          unseenCount: 0,
+          chatStatus: 'pending' // new request = pending
+        });
+
+        this.updateUnseenChatRequestCount();
       });
 
       this.socketService.onChatAlreadyTaken().subscribe(({ sessionId }: any) => {
@@ -164,6 +190,10 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     }
   }
 
+  updateUnseenChatRequestCount() {
+    this.unseenChatRequestCount = this.chatRequests.filter(c => c.unseenCount > 0).length;
+  }
+
   openChatRequests(content: any) {
     const buttonElement = document.activeElement as HTMLElement
     buttonElement.blur();
@@ -204,13 +234,18 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   selectRequest(request: any) {
     this.activeRequest = request.userId;
+    request.unseenCount = 0;
+    request.chatStatus = 'accepted';
+
+    this.updateUnseenChatRequestCount();
+
     this.selectedUser = { name: request.patientName, status: 'Online', id: request.userId };
     this.sessionId = request.sessionId;
     this.messages = [];
 
-    this.unseenChatRequestCount = 0;
     this.socketService.acceptChat(request.sessionId, this.userId);
   }
+
 
   requestChat() {
     this.socketService.requestChat(this.userId);

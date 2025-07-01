@@ -48,6 +48,11 @@
     color: #333;
 }
 
+.request-header .badge {
+  font-size: 0.75rem;
+  vertical-align: middle;
+}
+
 .request-list {
     list-style: none;
     padding: 0;
@@ -354,6 +359,30 @@
     font-size: 0.9rem;
     color: #555;
 }
+
+.status-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 6px;
+}
+
+.status-dot.pending {
+    background-color: #fd7e14;
+    /* orange */
+}
+
+.status-dot.accepted {
+    background-color: #28a745;
+    /* green */
+}
+
+.status-dot.ended {
+    background-color: #dc3545;
+    /* red */
+}
+
 
 
 @media screen and (max-width: 991px) {
