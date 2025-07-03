@@ -27,7 +27,8 @@ export class HeaderComponent implements OnInit {
     '/list': 'Users',
     '/bookings': 'Bookings',
     '/plans': 'Cuddle Plans',
-    '/chat': 'Chat'
+    '/chat': 'Chat',
+    '/banners': 'Banners'
   };
 
   constructor(

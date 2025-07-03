@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-end align-items-center mb-4">
+        <button class="btn btn-primary d-flex align-items-center shadow-sm px-4" (click)="openModal(bannerModal)">
+            <i class="bi bi-plus-lg me-2"></i>Add
+        </button>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div class="content row g-4">
+        <div class="col-md-3" *ngFor="let banner of allBanners; let i = index">
+            <div class="card h-100 shadow-sm position-relative">
+
+                <!-- Delete Icon -->
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 rounded-circle"
+                    (click)="deleteBanner(banner)">
+                    <i class="bi bi-trash"></i>
+                </button>
+
+                <img [src]="banner.imageUrl" class="card-img-top img-fluid" [alt]="banner.title" />
+                <div class="card-body">
+                    <h5 class="card-title">{{ banner.title }}</h5>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #bannerModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Add Banner</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <form [formGroup]="bannerForm" (ngSubmit)="onSubmit(modal)">
+        <div class="modal-body">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input id="title" placeholder="Enter title" type="text" class="form-control" formControlName="title">
+            </div>
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Upload Image</label>
+                <input type="file" class="form-control" id="imageFile" (change)="onFileChange($event)">
+            </div>
+
+            <div *ngIf="imagePreview" class="mb-3 text-center">
+                <img [src]="imagePreview" alt="Preview" class="img-fluid" style="max-height: 200px;" />
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="bannerForm.invalid">Save</button>
+        </div>
+    </form>
+</ng-template>

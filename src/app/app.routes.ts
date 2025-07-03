@@ -11,6 +11,7 @@ const loadPlansComponent = () => import('./components/plans/plans.component').th
 const loadListComponent = () => import('./components/list/list.component').then(m => m.ListComponent);
 const loadBookingsComponent = () => import('./components/bookings/bookings.component').then(m => m.BookingsComponent);
 const loadNotFoundComponent = () => import('./shared//components/not-found/not-found.component').then(m => m.NotFoundComponent);
+const loadBannerComponent = () => import('./components/banner/banner.component').then(m => m.BannerComponent)
 
 export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -26,6 +27,7 @@ export const routes: Routes = [
             { path: 'chat', component: ChatComponent, canActivate: [roleGuard], data: { roles: ['admin', 'staff', 'client'] } },
             { path: 'list', loadComponent: loadListComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
             { path: 'bookings', loadComponent: loadBookingsComponent, canActivate: [roleGuard], data: { roles: ['admin'] } },
+            { path: 'banners', loadComponent: loadBannerComponent, canActivate: [roleGuard], data: { roles: ['admin'] } }
             // { path: '**', loadComponent: loadNotFoundComponent, canActivate: [roleGuard], data: { roles: ['admin', 'staff', 'client', 'doctor'] } }
         ]
     },
