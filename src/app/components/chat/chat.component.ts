@@ -93,7 +93,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       }
     });
 
-    this.socketService.onChatEnded().subscribe((res) => {      
+    this.socketService.onChatEnded().subscribe((res) => {
       if (this.role === 'consultant') {
         const endedChat = this.chatRequests.find(c => c.userId === this.activeRequest);
         if (endedChat) {
@@ -139,7 +139,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       this.socketService.onNewChatRequest().subscribe(({ sessionId, patientId, patientName, timestamp }) => {
 
         this.chatRequests = this.chatRequests.filter(req => req.userId !== patientId);
-        
+
         this.chatRequests.push({
           sessionId,
           userId: patientId,
@@ -147,7 +147,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           timestamp,
           unseenCount: 0,
           chatStatus: 'pending' // new request = pending
-        });        
+        });
         this.updateUnseenChatRequestCount();
       });
 
@@ -248,6 +248,10 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
 
   selectRequest(request: any) {
+    if (request.chatStatus === 'accepted' || request.chatStatus === 'ended') {
+      return;
+    }
+
     this.activeRequest = request.userId;
     request.unseenCount = 0;
     request.chatStatus = 'accepted';
