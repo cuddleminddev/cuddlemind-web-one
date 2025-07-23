@@ -62,6 +62,47 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     this.socketService.connect(this.userId, this.role);
 
+    const storedSessionId = localStorage.getItem('sessionId');
+    if (storedSessionId) {
+      this.sessionId = storedSessionId;
+      this.socketService.rejoinSession(this.sessionId, this.userId);
+
+      this.socketService.getChatHistoryApi().subscribe((res: any) => {
+        if (res.status && res.data && res.data.length > 0) {
+          const history = res.data;
+
+          this.messages = history.map((msg: any) => ({
+            type: msg.senderId === this.userId ? 'sent' : 'received',
+            text: msg.message
+          }));
+
+          const otherUser = history.find((msg: any) => msg.senderId !== this.userId)?.sender;
+          if (otherUser) {
+            this.selectedUser = {
+              name: otherUser.name || 'User',
+              status: 'Online',
+              id: otherUser.id
+            };
+
+            if (this.role === 'consultant') {
+              this.chatRequests.push({
+                sessionId: history[0].sessionId,
+                userId: otherUser.id,
+                patientName: otherUser.name,
+                timestamp: history[0].createdAt,
+                unseenCount: 0,
+                chatStatus: 'accepted'
+              });
+
+              this.activeRequest = otherUser.id;
+            }
+          }
+
+          this.scrollToBottom();
+        }
+      });
+    }
+
     this.socketService.onMessage().subscribe(msg => {
       this.messages.push({
         type: msg.senderId === this.userId ? 'sent' : 'received',
@@ -82,6 +123,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     this.socketService.onChatStarted().subscribe(data => {
       this.sessionId = data.sessionId;
+      localStorage.setItem('sessionId', this.sessionId);
       this.socketService.joinSession(this.sessionId);
 
       if (this.role === 'patient') {
@@ -112,6 +154,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       this.sessionId = '';
       this.selectedUser = { name: '', status: '', id: '' };
       this.activeRequest = '';
+      localStorage.removeItem('sessionId');
     });
 
 
@@ -293,6 +336,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           this.sessionId = '';
           this.selectedUser = { name: '', status: '', id: '' };
           this.activeRequest = '';
+          localStorage.removeItem('sessionId');
         }
       });
     }

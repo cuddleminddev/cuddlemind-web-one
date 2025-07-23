@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class SocketService {
   private socket!: Socket;
   private BaseUrl = `${environment.apiUrl}/users/doctors`
+  private ApiUrl = `${environment.apiUrl}/chat/messages-by-sender`
 
   constructor(
     private http: HttpClient
@@ -29,6 +30,25 @@ export class SocketService {
 
   joinSession(sessionId: string) {
     this.socket.emit('joinSession', sessionId);
+  }
+
+  rejoinSession(sessionId: string, userId: string) {
+    this.socket.emit('rejoin_session', { sessionId, userId });
+
+    this.socket.once('rejoined_session', (payload: { sessionId: string }) => {
+      console.log('✅ Rejoined session:', payload.sessionId);
+    });
+
+    this.socket.once('rejoin_error', (err) => {
+      console.error('❌ Rejoin session failed:', err.message);
+    });
+  }
+
+
+  getChatHistory() {
+    return new Observable(observer => {
+      this.socket.on('chat_history', data => observer.next(data));
+    });
   }
 
   sendMessage(payload: {
@@ -102,7 +122,7 @@ export class SocketService {
     sessionId: string;
     patientId: string;
     doctorId: any;
-  }) {    
+  }) {
     this.socket.emit('send_doctor_info', payload)
   }
 
@@ -124,6 +144,10 @@ export class SocketService {
 
   getDoctorList() {
     return this.http.get(`${this.BaseUrl}`)
+  }
+
+  getChatHistoryApi(){
+    return this.http.get(`${this.ApiUrl}`)
   }
 
 }
