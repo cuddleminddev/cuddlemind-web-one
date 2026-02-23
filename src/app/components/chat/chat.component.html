@@ -4,7 +4,6 @@
         class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle">
         {{ chatRequests.length }}
     </span>
-
 </button>
 
 <div class="chat-container">
@@ -75,14 +74,17 @@
                 Select a chat to view messages.
             </div>
         </div>
-
+        
         <!-- Input -->
         <div class="chat-input">
             <button *ngIf="role === 'consultant' && sessionId" class="end-chat-btn" (click)="endChat()">
                 End Chat
             </button>
-            <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (keydown.enter)="sendMessage()"
-                [disabled]="!sessionId" />
+            <input
+                type="text"
+                placeholder="Type a message..."
+                [(ngModel)]="newMessage"
+                (keydown.enter)="sendMessage()" />
             <button *ngIf="role === 'consultant'" [disabled]="!sessionId" class="plus-btn"
                 (click)="openDoctorListModal(doctorListModal)" type="button" title="Doctors List">
                 <i class="bi bi-plus-circle"></i>

@@ -277,18 +277,26 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
 
   sendMessage() {
-    if (!this.newMessage.trim() || !this.sessionId) return;
+  console.log('Session ID:', this.sessionId);
+  console.log('Message:', this.newMessage);
 
-    const payload = {
-      sessionId: this.sessionId,
-      senderId: this.userId,
-      message: this.newMessage
-    };
-
-    this.socketService.sendMessage(payload);
-
-    this.newMessage = '';
+  if (!this.newMessage.trim() || !this.sessionId) {
+    console.log('Blocked: Missing sessionId or message');
+    return;
   }
+
+  const payload = {
+    sessionId: this.sessionId,
+    senderId: this.userId,
+    message: this.newMessage
+  };
+
+  console.log('Sending payload:', payload);
+
+  this.socketService.sendMessage(payload);
+
+  this.newMessage = '';
+}
 
   selectRequest(request: any) {
     if (request.chatStatus === 'accepted' || request.chatStatus === 'ended') {

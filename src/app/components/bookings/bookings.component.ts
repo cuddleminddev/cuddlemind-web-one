@@ -53,10 +53,12 @@ export class BookingsComponent implements OnInit {
     this.loading = true;
     this.service.getBookingsList().subscribe({
       next: (res: any) => {
+        console.log('Bookings API Response:', res);
         this.bookings = res.data || []
         this.loading = false;
       },
       error: (err) => {
+        console.log('Bookings API Error:', err); 
         this.loading = false;
         this.alertService.showAlert({
           message: err.error.message,

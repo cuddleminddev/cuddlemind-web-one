@@ -221,8 +221,13 @@ export class AllComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed) {
         this.service.deleteUser(id).subscribe({
-          next: (res) => {
-            this.loadAllUsers(true);
+          next: () => {
+
+            // Remove user from local array instantly
+            this.allUsers = this.allUsers.filter(
+              (user: any) => user.id !== id
+            );
+
             Swal.fire({
               title: "Deleted!",
               text: "User has been deleted.",

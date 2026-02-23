@@ -64,36 +64,31 @@ export class BannerComponent implements OnInit {
   }
 
   onSubmit(modal: any) {
-    if (this.bannerForm.valid && this.selectedFile) {
-      const formData = new FormData();
-      formData.append('title', this.bannerForm.get('title')?.value);
-      formData.append('image', this.selectedFile);
 
-      this.service.addBanner(formData).subscribe({
-        next: () => {
-          this.loadBannerList();
-          this.alertService.showAlert({
-            message: 'Banner added successfully!',
-            type: 'success',
-            autoDismiss: true,
-            duration: 3000
-          });
-          this.modalService.dismissAll();
-          this.imagePreview = null;
-          this.selectedFile = null;
-        },
-        error: (err) => {
-          this.alertService.showAlert({
-            message: err.error.message,
-            type: 'error',
-            autoDismiss: true,
-            duration: 4000
-          });
-        }
-      });
-    }
+  if (!this.bannerForm.valid || !this.selectedFile) {
+    this.bannerForm.markAllAsTouched();
+    return;
   }
 
+  const formData = new FormData();
+  formData.append('title', this.bannerForm.get('title')?.value);
+  formData.append('image', this.selectedFile);
+
+  this.service.addBanner(formData).subscribe({
+    next: () => {
+      this.loadBannerList();
+      this.alertService.showAlert({
+        message: 'Banner added successfully!',
+        type: 'success',
+        autoDismiss: true,
+        duration: 3000
+      });
+      this.modalService.dismissAll();
+      this.imagePreview = null;
+      this.selectedFile = null;
+    }
+  });
+}
 
   deleteBanner(banner: any) {
     Swal.fire({

@@ -15,8 +15,16 @@ export class SocketService {
   ) { }
 
   connect(userId: string, role: 'consultant' | 'patient') {
-    this.socket = io('https://api.cuddlemind.com/', {
-      query: { userId, role }
+    this.socket = io('https://api.cuddlemind.palqar.cloud', {
+  query: { userId, role },
+  transports: ['websocket']
+});
+    this.socket.on('connect', () => {
+      console.log('✅ SOCKET CONNECTED:', this.socket.id);
+    });
+
+    this.socket.on('connect_error', (err) => {
+      console.error('❌ SOCKET ERROR:', err);
     });
 
     // this.socket.on('connect', () => {

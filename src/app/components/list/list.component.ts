@@ -15,6 +15,7 @@ import { ClientsComponent } from "./clients/clients.component";
   styleUrl: './list.component.css'
 })
 export class ListComponent {
+  activeTab: string = 'all'; 
 
   messages: string[] = [];
 

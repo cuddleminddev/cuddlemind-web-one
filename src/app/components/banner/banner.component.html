@@ -39,12 +39,31 @@
     <form [formGroup]="bannerForm" (ngSubmit)="onSubmit(modal)">
         <div class="modal-body">
             <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input id="title" placeholder="Enter title" type="text" class="form-control" formControlName="title">
-            </div>
+    <label for="title" class="form-label">
+        Title <span class="text-danger">*</span>
+    </label>
+
+    <input
+        id="title"
+        placeholder="Enter title"
+        type="text"
+        class="form-control"
+        formControlName="title"
+        [class.is-invalid]="bannerForm.get('title')?.touched && bannerForm.get('title')?.invalid">
+
+    <div *ngIf="bannerForm.get('title')?.touched && bannerForm.get('title')?.errors?.['required']"
+         class="invalid-feedback">
+        Title is required.
+    </div>
+</div>
             <div class="mb-3">
                 <label for="imageFile" class="form-label">Upload Image</label>
                 <input type="file" class="form-control" id="imageFile" (change)="onFileChange($event)">
+                <!-- 🔥 Image Required Error -->
+                <div *ngIf="!selectedFile && bannerForm.touched"
+                    class="text-danger small mt-1">
+                    Image is required.
+                </div>
             </div>
 
             <div *ngIf="imagePreview" class="mb-3 text-center">

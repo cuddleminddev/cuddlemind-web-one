@@ -1,43 +1,56 @@
-<tabset [justified]="true">
+<ul class="nav nav-tabs nav-fill">
 
-  <tab heading="All Users" #allTab="tab">
-    <app-all
-      *ngIf="allTab.active"
-      (onInit)="message('All Users component activated')"
-      (onDestroy)="message('All Users component destroyed')"
-    ></app-all>
-  </tab>
+  <li class="nav-item">
+    <button class="nav-link"
+            [class.active]="activeTab === 'all'"
+            (click)="activeTab = 'all'">
+      All Users
+    </button>
+  </li>
 
-  <tab heading="Admins" #adminsTab="tab">
-    <app-admins
-      *ngIf="adminsTab.active"
-      (onInit)="message('Admins component activated')"
-      (onDestroy)="message('Admins component destroyed')"
-    ></app-admins>
-  </tab>
+  <li class="nav-item">
+    <button class="nav-link"
+            [class.active]="activeTab === 'admins'"
+            (click)="activeTab = 'admins'">
+      Admins
+    </button>
+  </li>
 
-  <tab heading="Doctors" #doctorsTab="tab">
-    <app-doctors
-      *ngIf="doctorsTab.active"
-      (onInit)="message('Doctors component activated')"
-      (onDestroy)="message('Doctors component destroyed')"
-    ></app-doctors>
-  </tab>
+  <li class="nav-item">
+    <button class="nav-link"
+            [class.active]="activeTab === 'doctors'"
+            (click)="activeTab = 'doctors'">
+      Doctors
+    </button>
+  </li>
 
-  <tab heading="Staffs" #staffsTab="tab">
-    <app-staffs
-      *ngIf="staffsTab.active"
-      (onInit)="message('Staffs component activated')"
-      (onDestroy)="message('Staffs component destroyed')"
-    ></app-staffs>
-  </tab>
+  <li class="nav-item">
+    <button class="nav-link"
+            [class.active]="activeTab === 'staffs'"
+            (click)="activeTab = 'staffs'">
+      Staffs
+    </button>
+  </li>
 
-  <tab heading="Clients" #clientsTab="tab">
-    <app-clients
-      *ngIf="clientsTab.active"
-      (onInit)="message('Clients component activated')"
-      (onDestroy)="message('Clients component destroyed')"
-    ></app-clients>
-  </tab>
+  <li class="nav-item">
+    <button class="nav-link"
+            [class.active]="activeTab === 'clients'"
+            (click)="activeTab = 'clients'">
+      Clients
+    </button>
+  </li>
 
-</tabset>
+</ul>
+<div class="mt-4">
+
+  <app-all *ngIf="activeTab === 'all'"></app-all>
+
+  <app-admins *ngIf="activeTab === 'admins'"></app-admins>
+
+  <app-doctors *ngIf="activeTab === 'doctors'"></app-doctors>
+
+  <app-staffs *ngIf="activeTab === 'staffs'"></app-staffs>
+
+  <app-clients *ngIf="activeTab === 'clients'"></app-clients>
+
+</div>
