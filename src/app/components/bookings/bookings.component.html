@@ -64,7 +64,7 @@
                         <td>{{ itm.paymentType }}</td>
                         <td>{{ itm.createdAt | date:'yyyy-MM-dd':'UTC' }}</td>
                         <td>{{itm.scheduledAt | date:'yyyy-MM-dd':'UTC' }}</td>
-                        <td>{{itm.scheduledAt | date:'HH:mm':'UTC'}}</td>
+                        <td>{{ itm.scheduledAt | date:'HH:mm' }}</td>
                         <td>{{itm.doctor.name}}</td>
                         <td>{{itm.patient.name}}</td>
                         <td>
