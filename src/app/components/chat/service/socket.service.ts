@@ -157,5 +157,23 @@ export class SocketService {
   getChatHistoryApi(){
     return this.http.get(`${this.ApiUrl}`)
   }
+  getConnectedDoctors(): Observable<any[]> {
+  return new Observable(observer => {
 
+    // Ask backend for connected doctors
+    this.socket.emit('get_connected_doctors');
+
+    const handler = (data: any[]) => {
+      
+      observer.next(data);
+    };
+
+    this.socket.on('connected_doctors_list', handler);
+
+    // Cleanup
+    return () => {
+      this.socket.off('connected_doctors_list', handler);
+    };
+  });
+}
 }

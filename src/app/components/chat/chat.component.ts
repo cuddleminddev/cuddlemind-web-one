@@ -7,7 +7,6 @@ import Swal from 'sweetalert2';
 import { NgbModal, NgbNavModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from '../list/service/list.service';
 import { FilterPipe } from '../../shared/pipes/filter.pipe';
-
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, FormsModule, NgbTooltipModule, NgbNavModule, FilterPipe],
@@ -61,6 +60,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     }
 
     this.socketService.connect(this.userId, this.role);
+    
 
     const storedSessionId = localStorage.getItem('sessionId');
     if (storedSessionId) {
@@ -193,6 +193,13 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         });
         this.updateUnseenChatRequestCount();
       });
+      this.socketService.getConnectedDoctors().subscribe((doctors: any[]) => {
+      if (Array.isArray(doctors)) {
+        this.doctorList = doctors;
+      } else {
+        this.doctorList = [];
+      }
+    });
 
       this.socketService.onChatAlreadyTaken().subscribe(({ sessionId }: any) => {
         this.alertService.showAlert({
@@ -223,12 +230,6 @@ export class ChatComponent implements AfterViewChecked, OnInit {
           this.sessionId = '';
           this.messages = [];
           this.newMessage = '';
-        }
-      });
-
-      this.socketService.getDoctorList().subscribe((res: any) => {
-        if (res.status && res.data) {
-          this.doctorList = res.data;
         }
       });
 
