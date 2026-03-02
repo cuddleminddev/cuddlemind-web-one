@@ -1,0 +1,118 @@
+<div class="container-fluid py-4">
+
+  <!-- Page Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Contact Reports</h3>
+
+    <div class="d-flex gap-2">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by name or email"
+        [(ngModel)]="searchText"
+        style="width: 250px;"
+      />
+
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="selectedDate"
+      />
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive shadow-sm rounded bg-white">
+    <table class="table table-hover align-middle mb-0">
+
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Message Preview</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of filteredContacts; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item.firstName }} {{ item.lastName }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.message | slice:0:40 }}...</td>
+          <td>{{ item.createdAt | date:'yyyy-MM-dd' }}</td>
+
+          <td>
+            <button
+              class="btn btn-sm btn-primary me-2"
+              (click)="openViewModal(viewModal, item)"
+            >
+              View
+            </button>
+
+            <button
+              class="btn btn-sm btn-danger"
+              (click)="deleteContact(item)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="filteredContacts.length === 0">
+          <td colspan="6" class="text-center py-4 text-muted">
+            No contact records found.
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+  </div>
+</div>
+
+
+<!-- VIEW MODAL -->
+<ng-template #viewModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Contact Details</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="mb-3">
+      <label class="fw-semibold">Full Name</label>
+      <p class="mb-0">
+        {{ selectedMessage?.firstName }} {{ selectedMessage?.lastName }}
+      </p>
+    </div>
+
+    <div class="mb-3">
+      <label class="fw-semibold">Email</label>
+      <p class="mb-0">{{ selectedMessage?.email }}</p>
+    </div>
+
+    <div class="mb-3">
+      <label class="fw-semibold">Date</label>
+      <p class="mb-0">
+        {{ selectedMessage?.createdAt | date:'yyyy-MM-dd HH:mm' }}
+      </p>
+    </div>
+
+    <div class="mb-3">
+      <label class="fw-semibold">Message</label>
+      <div class="p-3 bg-light rounded" style="max-height:200px; overflow:auto;">
+        {{ selectedMessage?.message }}
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.close()">
+      Close
+    </button>
+  </div>
+</ng-template>

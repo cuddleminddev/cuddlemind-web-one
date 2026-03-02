@@ -28,7 +28,8 @@ export class HeaderComponent implements OnInit {
     '/bookings': 'Bookings',
     '/plans': 'Cuddle Plans',
     '/chat': 'Chat',
-    '/banners': 'Banners'
+    '/banners': 'Banners',
+     '/reports': 'Reports' 
   };
 
   constructor(
