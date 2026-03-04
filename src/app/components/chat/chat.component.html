@@ -5,7 +5,6 @@
         {{ chatRequests.length }}
     </span>
 </button>
-let msg of messages
 <div class="chat-container">
     <!-- Left Panel -->
     <div class="chat-requests" *ngIf="!(role === 'patient' && sessionId) && (showRequestsOnMobile || screenIsWide)">

@@ -54,5 +54,8 @@ export class ListService {
   getDoctorWeeklySchedule(id: string | null) {
     return this.http.get(`${this.baseUrl1}/timeslots/weekly?doctorId=${id}`)
   }
+  getAllDoctors(): Observable<any> {
+  return this.http.get(`${this.baseUrl1}/users/all-doctors`);
+}
 
 }

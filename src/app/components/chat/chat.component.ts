@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { NgbModal, NgbNavModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from '../list/service/list.service';
 import { FilterPipe } from '../../shared/pipes/filter.pipe';
-
+ 
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, FormsModule, NgbTooltipModule, NgbNavModule, FilterPipe],
@@ -234,11 +234,11 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         }
       });
 
-      this.doctorService.getUserTypes(1, 100, 'doctor').subscribe((res: any) => {
-        if (res.status && res.data.users) {
-          this.allDoctorList = res.data.users;
+      this.doctorService.getAllDoctors().subscribe((res: any) => {
+        if (res.status && res.data) {
+          this.allDoctorList = res.data;
         }
-      })
+      });
     }
   }
 
