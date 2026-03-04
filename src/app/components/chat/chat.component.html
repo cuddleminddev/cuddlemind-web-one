@@ -5,7 +5,7 @@
         {{ chatRequests.length }}
     </span>
 </button>
-
+let msg of messages
 <div class="chat-container">
     <!-- Left Panel -->
     <div class="chat-requests" *ngIf="!(role === 'patient' && sessionId) && (showRequestsOnMobile || screenIsWide)">
@@ -23,10 +23,11 @@
                         <span>
                             {{ user.patientName || user.userId }}
                             <span class="status-dot" [ngClass]="{
-              'pending': user.chatStatus === 'pending',
-              'accepted': user.chatStatus === 'accepted',
-              'ended': user.chatStatus === 'ended'
-            }"></span>
+                                'pending': user.chatStatus === 'pending',
+                                'accepted': user.chatStatus === 'accepted',
+                                'ended': user.chatStatus === 'ended'
+                                }">
+                            </span>
                         </span>
                         <small class="text-muted">{{ user.timestamp | date: 'shortTime' }}</small>
                     </div>
@@ -58,22 +59,39 @@
 
         <!-- Messages -->
         <div #messagesEnd class="chat-messages">
-            <div *ngFor="let msg of messages" class="message" [ngClass]="msg.type">
-                {{ msg.text }}
-                <div *ngIf="msg.type === 'doctor-card'" class="message doctor-card">
-                    <div class="doctor-card-box">
-                        <h6><i class="bi bi-person-badge"></i></h6>
-                        <h6 *ngIf="msg.card.name">{{ msg.card.name }}</h6>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="selectedUser.name && messages.length === 0" class="no-messages-message">
-                Start a conversation!
-            </div>
-            <div *ngIf="!selectedUser.name && role !== 'patient'" class="no-chat-selected-message">
-                Select a chat to view messages.
-            </div>
-        </div>
+
+  <ng-container *ngFor="let msg of messages">
+
+    <!-- Normal messages -->
+    <div *ngIf="msg.type !== 'doctor-card'"
+         class="message"
+         [ngClass]="msg.type">
+      {{ msg.text }}
+    </div>
+
+    <!-- Doctor card -->
+    <div *ngIf="msg.type === 'doctor-card'"
+         class="message"
+         [ngClass]="msg.senderId === userId ? 'sent' : 'received'">
+
+      <div class="doctor-card-box p-2 rounded border d-inline-flex align-items-center gap-2">
+        <i class="bi bi-person-badge"></i>
+        <strong>{{ msg.card?.name }}</strong>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <div *ngIf="selectedUser.name && messages.length === 0" class="no-messages-message">
+    Start a conversation!
+  </div>
+
+  <div *ngIf="!selectedUser.name && role !== 'patient'" class="no-chat-selected-message">
+    Select a chat to view messages.
+  </div>
+
+</div>
         
         <!-- Input -->
         <div class="chat-input">

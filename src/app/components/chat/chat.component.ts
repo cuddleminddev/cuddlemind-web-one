@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { NgbModal, NgbNavModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from '../list/service/list.service';
 import { FilterPipe } from '../../shared/pipes/filter.pipe';
+
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, FormsModule, NgbTooltipModule, NgbNavModule, FilterPipe],
@@ -390,25 +391,34 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
 
   sendDoctorCardInstantBook(doct: any) {
-    if (!this.sessionId || !this.userId) return;
 
-    const doctorCard = this.allDoctorList.find(doc => doc.id === doct.id);
-    if (!doctorCard) return;
+  if (!this.sessionId || !this.userId) return;
 
-    const payload = {
-      sessionId: this.sessionId,
-      patientId: this.selectedUser.id,
-      doctorId: doctorCard.id
-    };
+  const doctorCard = this.allDoctorList.find(doc => doc.id === doct.id);
+  if (!doctorCard) return;
 
-    this.socketService.sendDoctorCardInstantbooking(payload)
+  const payload = {
+    sessionId: this.sessionId,
+    patientId: this.selectedUser.id,
+    doctorId: doctorCard.id
+  };
 
-    this.alertService.showAlert({
-      message: 'Doctor card send for instant booking.',
-      type: 'success',
-      autoDismiss: true,
-      duration: 4000
-    });
-  }
+  this.socketService.sendDoctorCardInstantbooking(payload);
+
+  // 🔥 ADD THIS PART
+  this.messages.push({
+    type: 'doctor-card',
+    card: doctorCard
+  });
+
+  this.scrollToBottom();
+
+  this.alertService.showAlert({
+    message: 'Doctor card send for instant booking.',
+    type: 'success',
+    autoDismiss: true,
+    duration: 4000
+  });
+}
 
 }
