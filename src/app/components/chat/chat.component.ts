@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { NgbModal, NgbNavModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { ListService } from '../list/service/list.service';
 import { FilterPipe } from '../../shared/pipes/filter.pipe';
- 
+
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, FormsModule, NgbTooltipModule, NgbNavModule, FilterPipe],
@@ -301,22 +301,75 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 }
 
   selectRequest(request: any) {
-    if (request.chatStatus === 'accepted' || request.chatStatus === 'ended') {
-      return;
-    }
 
-    this.activeRequest = request.userId;
-    request.unseenCount = 0;
-    request.chatStatus = 'accepted';
+  // If a chat is already active and user clicks another request
+  if (this.sessionId && this.sessionId !== request.sessionId) {
 
-    this.updateUnseenChatRequestCount();
+    Swal.fire({
+      title: "Switch Chat?",
+      text: "You have an active chat. Do you want to end it and switch?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, End & Switch",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
 
-    this.selectedUser = { name: request.patientName, status: 'Online', id: request.userId };
-    this.sessionId = request.sessionId;
-    this.messages = [];
+      if (result.isConfirmed) {
 
-    this.socketService.acceptChat(request.sessionId, this.userId);
+        // End current chat
+        this.socketService.endChat(this.sessionId);
+
+        this.messages.push({
+          type: 'system',
+          text: 'You ended the chat.'
+        });
+
+        this.chatRequests = this.chatRequests.filter(req => req.sessionId !== this.sessionId);
+
+        this.sessionId = '';
+        this.selectedUser = { name: '', status: '', id: '' };
+        this.activeRequest = '';
+
+        localStorage.removeItem('sessionId');
+
+        // Open the new chat
+        this.startNewChat(request);
+      }
+
+    });
+
+    return;
   }
+
+  // If no active chat
+  this.startNewChat(request);
+}
+
+startNewChat(request: any) {
+
+  if (request.chatStatus === 'accepted' || request.chatStatus === 'ended') {
+    return;
+  }
+
+  this.activeRequest = request.userId;
+
+  request.unseenCount = 0;
+  request.chatStatus = 'accepted';
+
+  this.updateUnseenChatRequestCount();
+
+  this.selectedUser = {
+    name: request.patientName,
+    status: 'Online',
+    id: request.userId
+  };
+
+  this.sessionId = request.sessionId;
+
+  this.messages = [];
+
+  this.socketService.acceptChat(request.sessionId, this.userId);
+}
 
 
   requestChat() {
