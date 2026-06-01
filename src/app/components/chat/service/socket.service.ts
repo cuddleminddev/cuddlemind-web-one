@@ -15,7 +15,7 @@ export class SocketService {
   ) { }
 
   connect(userId: string, role: 'consultant' | 'patient') {
-    this.socket = io('https://api.cuddlemind.palqar.cloud', {
+    this.socket = io('https://api.cuddlemind.com', {
   query: { userId, role },
   transports: ['websocket']
 });
